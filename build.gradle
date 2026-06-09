@@ -1,8 +1,8 @@
 plugins {
 	id 'java'
-	id 'org.springframework.boot' version '3.5.0'
+	id 'org.springframework.boot' version '4.0.6'
 	id 'io.spring.dependency-management' version '1.1.7'
-	id 'com.vaadin' version '24.7.6' //'24.4.4' //MS added
+	id 'com.vaadin' version '25.1.5' //'24.4.4' //MS added
 }
 
 group = 'com.usmb.but3'
@@ -28,10 +28,11 @@ repositories {
 
 ext {
 	//vaadinVersion = '24.4.4' // MS added
-	vaadinVersion = '24.7.6' // MS added
+	vaadinVersion = '25.1.5' // MS added
 }
 
 dependencies {
+	developmentOnly('com.vaadin:vaadin-dev')
 	implementation 'io.github.cdimascio:dotenv-java:3.0.0'
 	implementation 'org.springframework.boot:spring-boot-starter-actuator'
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
@@ -47,7 +48,6 @@ dependencies {
     // out : 19/06 testImplementation 'org.mockito:mockito-core:5.2.0' // or your version
     // out : 19/06 mockitoAgent 'org.mockito:mockito-core:5.2.0' // or your version
 	// MS added for Hibernate schema generation
-	implementation 'org.hibernate:hibernate-core:6.3.0.Final'
 	// MS added for Vaadin
 	implementation 'com.vaadin:vaadin-spring-boot-starter'
 }
