@@ -1,19 +1,19 @@
 CREATE TYPE role_utilisateur AS ENUM (
     'BIBLIOTHECAIRE',
-    'EMPRUNTEUR',
+    'EMPRUNTEUR'
 );
 
 
 CREATE TABLE IF NOT EXISTS utilisateur (
     id INTEGER PRIMARY KEY,
     nom VARCHAR(255) NOT NULL,
-    prenom VARCHAR(255) NOT,
+    prenom VARCHAR(255) NOT NULL,
     email VARCHAR(255) NOT NULL,
     date_naissance DATE NOT NULL,
     date_fin_abonnement DATE,
     numero_carte CHAR(10) NOT NULL,
     role_utilisateur role_utilisateur NOT NULL,
-    hash_mot_de_passe VARCHAR(255) NOT NULL,
+    hash_mot_de_passe VARCHAR(255) NOT NULL
 );
 
 CREATE SEQUENCE IF NOT EXISTS utilisateur_id_seq;
