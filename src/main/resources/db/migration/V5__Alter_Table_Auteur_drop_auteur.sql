@@ -1,0 +1,2 @@
+ALTER TABLE livre
+DROP COLUMN IF EXISTS auteur;
