@@ -9,6 +9,11 @@ services:
       - "5432:5432"
     volumes:
       - pgdata:/var/lib/postgresql/data
+    command: >
+      bash -c "docker-entrypoint.sh postgres &
+               until pg_isready; do sleep 1; done;
+               psql -U $$POSTGRES_USER -d $$POSTGRES_DB -c 'CREATE SCHEMA IF NOT EXISTS biblio;';
+               wait"
 
 volumes:
   pgdata:

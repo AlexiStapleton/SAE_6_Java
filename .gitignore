@@ -44,3 +44,6 @@ out/
 .env
 
 *.log
+
+src/main/frontend/generated/
+logs/

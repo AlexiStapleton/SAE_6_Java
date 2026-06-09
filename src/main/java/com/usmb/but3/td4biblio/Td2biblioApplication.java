@@ -12,6 +12,8 @@ public class Td2biblioApplication {
 		dotenv.entries().forEach(e ->
 				System.setProperty(e.getKey(), e.getValue())
 		);
+		System.out.println("DB_USERNAME: " + System.getProperty("DB_USERNAME"));
+		System.out.println("POSTGRES_USER: " + System.getProperty("POSTGRES_USER"));
 		SpringApplication.run(Td2biblioApplication.class, args);
 	}
 
