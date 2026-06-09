@@ -36,5 +36,11 @@ out/
 ### VS Code ###
 .vscode/
 
+
+
 ### Visual Studio ###
 .vs/
+
+.env
+
+*.log
