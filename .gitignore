@@ -47,3 +47,5 @@ out/
 
 src/main/frontend/generated/
 logs/
+*.log
+src/main/frontend/types/index.d.ts
