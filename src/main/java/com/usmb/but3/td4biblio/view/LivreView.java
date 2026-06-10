@@ -52,7 +52,7 @@ public class LivreView extends VerticalLayout {
 			String nomAuteur = livre.getNomAuteur();
 			return nomAuteur != null ? nomAuteur : "";
 		}).setHeader("Auteur").setKey("nomAuteur");
-		grid.addColumns("datePublication", "editeur", "nbPages");
+		grid.addColumns("datePublication", "nomEditeur", "nbPages");
 
 
 		grid.getColumnByKey("id").setWidth("50px").setFlexGrow(0);
