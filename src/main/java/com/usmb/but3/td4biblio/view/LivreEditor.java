@@ -1,10 +1,12 @@
 package com.usmb.but3.td4biblio.view;
 
 import com.usmb.but3.td4biblio.dto.AuteurResponseDto;
+import com.usmb.but3.td4biblio.dto.EditeurResponseDto;
 import com.usmb.but3.td4biblio.dto.LivreDetailResponseDto;
 import com.usmb.but3.td4biblio.entity.Auteur;
 import com.usmb.but3.td4biblio.entity.Livre;
 import com.usmb.but3.td4biblio.service.AuteurService;
+import com.usmb.but3.td4biblio.service.EditeurService;
 import com.usmb.but3.td4biblio.service.LivreService;
 import com.vaadin.flow.component.Key;
 import com.vaadin.flow.component.KeyNotifier;
@@ -35,6 +37,7 @@ public class LivreEditor extends VerticalLayout implements KeyNotifier {
 
 	private final LivreService livreService;
 	private final AuteurService auteurService;
+	private final EditeurService editeurService;
 
 
 	/**
@@ -44,7 +47,8 @@ public class LivreEditor extends VerticalLayout implements KeyNotifier {
 
 	/* Fields to edit properties in Livre entity */
 	TextField titre = new TextField("Titre");
-	TextField editeur = new TextField("Editeur");
+	ComboBox<EditeurResponseDto> editeur =
+			new ComboBox<>("Editeur");
 	DatePicker datePublication = new DatePicker("Date de publication");
 	IntegerField nbPages = new IntegerField("Nombre de pages");
 	{
@@ -66,15 +70,20 @@ public class LivreEditor extends VerticalLayout implements KeyNotifier {
 	Binder<LivreDetailResponseDto> binder = new Binder<>(LivreDetailResponseDto.class);
 	private ChangeHandler changeHandler;
 
-	public LivreEditor(AuteurService auteurService, LivreService livreService) {
+	public LivreEditor(AuteurService auteurService, LivreService livreService, EditeurService editeurService) {
 
 		this.livreService = livreService;
 		this.auteurService = auteurService;
+		this.editeurService = editeurService;
+
+		editeur.setItems(editeurService.getAllEditeurs());
+		editeur.setItemLabelGenerator(EditeurResponseDto::getNom);
+
 
 		auteurComboBox.setPlaceholder("Sélectionner un auteur");
 		auteurComboBox.setClearButtonVisible(true);
 		// do it after :
-		//auteurComboBox.setItems(auteurService.getAllAuteurs());
+		auteurComboBox.setItems(auteurService.getAllAuteurs());
 		auteurComboBox.setItemLabelGenerator(AuteurResponseDto::getDesc);
 
 		add(titre, auteurComboBox, datePublication, editeur, nbPages , actions);
