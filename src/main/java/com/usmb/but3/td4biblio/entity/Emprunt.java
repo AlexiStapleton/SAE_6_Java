@@ -33,7 +33,7 @@ public class Emprunt {
     @AllArgsConstructor
     @Data
     public static class EmpruntId implements Serializable {
-        private Integer utilisateur;
-        private Integer document;
+        private Integer utilisateurId;
+        private Integer documentId;
     }
 }

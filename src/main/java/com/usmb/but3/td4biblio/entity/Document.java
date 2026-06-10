@@ -18,7 +18,7 @@ public class Document {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Integer Id;
 
     @ManyToOne
     @JoinColumn(name = "auteur_id")

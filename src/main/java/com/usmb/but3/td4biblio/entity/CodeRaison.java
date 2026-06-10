@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 public class CodeRaison {
 
     @Id
-    private Integer id;
+    private Integer Id;
     private String nom;
     private String description;
 }

@@ -68,7 +68,8 @@ public class AuteurView extends VerticalLayout {
 		});
 
 		// Instantiate and edit new Customer the new button is clicked
-		addNewBtn.addClickListener(e -> editor.editAuteur(new Auteur(null, "", "", "", null, null)));
+		// TODO Remettre
+		//addNewBtn.addClickListener(e -> editor.editAuteur(new Auteur(null, "", "", "", null, null)));
 
 		// Listen changes made by the editor, refresh data from backend
 		editor.setChangeHandler(() -> {
