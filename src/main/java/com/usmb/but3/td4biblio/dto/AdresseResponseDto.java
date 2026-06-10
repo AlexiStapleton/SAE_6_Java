@@ -1,19 +1,13 @@
-package com.usmb.but3.td4biblio.entity;
+package com.usmb.but3.td4biblio.dto;
 
-import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Data
-@Entity
-@Table(name = "adresse", schema = "biblio")
-public class Adresse {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+public class AdresseResponseDto {
     private Integer Id;
     private String rue;
     private String codePostal;

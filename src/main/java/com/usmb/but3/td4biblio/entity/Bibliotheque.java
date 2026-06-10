@@ -14,7 +14,7 @@ public class Bibliotheque {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Integer Id;
     private String nom;
 
     @ManyToOne

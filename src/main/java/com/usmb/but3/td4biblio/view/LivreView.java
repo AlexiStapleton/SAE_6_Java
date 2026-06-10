@@ -1,5 +1,8 @@
 package com.usmb.but3.td4biblio.view;
 
+import com.usmb.but3.td4biblio.dto.AuteurResponseDto;
+import com.usmb.but3.td4biblio.dto.LivreDetailResponseDto;
+import com.usmb.but3.td4biblio.dto.LivreResponseDto;
 import com.usmb.but3.td4biblio.entity.Auteur;
 import com.usmb.but3.td4biblio.entity.Livre;
 import com.usmb.but3.td4biblio.service.LivreService;
@@ -15,7 +18,7 @@ import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import org.springframework.util.StringUtils;
 
-@Route (value="livre") 
+@Route (value="livre")
 @PageTitle("Les Livres")
 @Menu(title = "Les Livres", order = 1, icon = "vaadin:clipboard-check")
 
@@ -23,7 +26,7 @@ public class LivreView extends VerticalLayout {
 
 	private final LivreService livreService;
 
-	final Grid<Livre> grid;
+	final Grid<LivreResponseDto> grid;
 
 	final TextField filter;
 
@@ -33,7 +36,7 @@ public class LivreView extends VerticalLayout {
 
 		this.livreService = livreService;
 
-		this.grid = new Grid<>(Livre.class);
+		this.grid = new Grid<>(LivreResponseDto.class);
 		this.filter = new TextField();
 		this.addNewBtn = new Button("Ajouter un livre", VaadinIcon.PLUS.create());
 
@@ -42,14 +45,14 @@ public class LivreView extends VerticalLayout {
 		add(actions, grid, editor);
 
 		grid.setHeight("300px");
-        grid.setColumns("id", "titre");
+		grid.setColumns("id", "titre");
 
-        // Add the custom column for auteur description
-        grid.addColumn(livre -> {
-            Auteur auteur = livre.getAuteur();
-            return auteur != null ? auteur.getDesc() : "";
-        }).setHeader("Auteur").setKey("auteurDescription");
-        grid.addColumns("datePublication", "editeur", "nbPages");
+		// Add the custom column for auteur description
+		grid.addColumn(livre -> {
+			String nomAuteur = livre.getNomAuteur();
+			return nomAuteur != null ? nomAuteur : "";
+		}).setHeader("Auteur").setKey("nomAuteur");
+		grid.addColumns("datePublication", "editeur", "nbPages");
 
 
 		grid.getColumnByKey("id").setWidth("50px").setFlexGrow(0);
@@ -62,14 +65,14 @@ public class LivreView extends VerticalLayout {
 		filter.setValueChangeMode(ValueChangeMode.LAZY);
 		filter.addValueChangeListener(e -> listLivres(e.getValue()));
 
-         
+
 		// Connect selected Livre to editor or hide if none is selected
 		grid.asSingleSelect().addValueChangeListener(e -> {
-			editor.editLivre(e.getValue());
+			editor.editLivre(livreService.getLivreById(e.getValue().getId()));
 		});
 
 		// Instantiate and edit new Livre when the new button is clicked
-		addNewBtn.addClickListener(e -> editor.editLivre(new Livre()));
+		addNewBtn.addClickListener(e -> editor.editLivre(new LivreDetailResponseDto()));
 
 		// Listen changes made by the editor, refresh data from backend
 		editor.setChangeHandler(() -> {
@@ -90,4 +93,3 @@ public class LivreView extends VerticalLayout {
 	}
 
 }
-

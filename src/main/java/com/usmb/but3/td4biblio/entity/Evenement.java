@@ -16,7 +16,7 @@ public class Evenement {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Integer Id;
     private String nom;
     private LocalDate dateDebut;
     private LocalDate dateFin;

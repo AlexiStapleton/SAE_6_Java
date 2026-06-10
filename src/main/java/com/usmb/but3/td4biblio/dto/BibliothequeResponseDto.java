@@ -1,6 +1,5 @@
-package com.usmb.but3.td4biblio.entity;
+package com.usmb.but3.td4biblio.dto;
 
-import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -8,11 +7,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-@Entity
-@Table(name = "type_evenement", schema = "biblio")
-public class TypeEvenement {
-
-    @Id
+public class BibliothequeResponseDto {
     private Integer Id;
     private String nom;
 }
