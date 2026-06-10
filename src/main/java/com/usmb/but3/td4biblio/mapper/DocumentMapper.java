@@ -1,12 +1,14 @@
 package com.usmb.but3.td4biblio.mapper;
 
 import com.usmb.but3.td4biblio.dto.DocumentCreateDto;
+import com.usmb.but3.td4biblio.dto.DocumentDetailResponseDto;
 import com.usmb.but3.td4biblio.dto.DocumentResponseDto;
+import com.usmb.but3.td4biblio.dto.GenreDocumentResponseDto;
 import com.usmb.but3.td4biblio.entity.Document;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
-@Mapper (componentModel = "spring")
+@Mapper (componentModel = "spring", uses = {AuteurMapper.class, EditeurMapper.class, BibliothequeMapper.class, GenreDocumentMapper.class, CodeRaisonMapper.class})
 public interface DocumentMapper {
 
     @Mapping( source = "auteur.nom", target = "nomAuteur" )
@@ -16,11 +18,8 @@ public interface DocumentMapper {
     @Mapping( source = "codeRaison.nom", target = "nomRaison" )
     DocumentResponseDto toResponse(Document document);
 
-    @Mapping(source = "auteurId", target = "auteur.id")
-    @Mapping(source = "editeurId", target = "editeur.id")
-    @Mapping(source = "bibliothequeId", target = "bibliotheque.id")
-    @Mapping(source = "genreId", target = "genre.id")
-    @Mapping(source = "codeRaisonId", target = "codeRaison.id")
+    DocumentDetailResponseDto toDetailResponse(Document document);
+
     Document toEntity (DocumentCreateDto dto);
 
 

@@ -5,6 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
@@ -22,4 +24,7 @@ public class Editeur {
     @ManyToOne
     @JoinColumn(name = "adresse_id")
     private Adresse adresse;
+
+    @OneToMany(mappedBy = "editeur")
+    private List<Document> documents;
 }

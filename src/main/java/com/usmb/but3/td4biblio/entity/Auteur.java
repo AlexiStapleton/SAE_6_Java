@@ -26,6 +26,8 @@ public class Auteur {
     private String nationalite;
     private LocalDate dateNaissance;
     private LocalDate dateDeces;
+    private String villeNaissance;
+    private String lienWikipedia;
 
     @ManyToMany
     @JoinTable(
@@ -36,8 +38,8 @@ public class Auteur {
     )
     private List<TypeAuteur> typesAuteur;
 
-    @OneToMany
-    private List<Livre> livres;
+    @OneToMany(mappedBy = "auteur")
+    private List<Document> documents;
 
     public boolean isEqualTo(Auteur auteur) {
         if (this == auteur) return true;

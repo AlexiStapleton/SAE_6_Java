@@ -1,5 +1,7 @@
 package com.usmb.but3.td4biblio.entity;
 
+import com.usmb.but3.td4biblio.entity.Document;
+import com.usmb.but3.td4biblio.entity.Utilisateur;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -13,16 +15,18 @@ import java.time.LocalDate;
 @Data
 @Entity
 @Table(name = "emprunt", schema = "biblio")
-@IdClass(Emprunt.EmpruntId.class)
 public class Emprunt {
 
-    @Id
+    @EmbeddedId
+    private EmpruntId id;
+
     @ManyToOne
+    @MapsId("utilisateurId")
     @JoinColumn(name = "utilisateur_id")
     private Utilisateur utilisateur;
 
-    @Id
     @ManyToOne
+    @MapsId("documentId")
     @JoinColumn(name = "document_id")
     private Document document;
 
@@ -32,6 +36,7 @@ public class Emprunt {
     @NoArgsConstructor
     @AllArgsConstructor
     @Data
+    @Embeddable
     public static class EmpruntId implements Serializable {
         private Integer utilisateurId;
         private Integer documentId;

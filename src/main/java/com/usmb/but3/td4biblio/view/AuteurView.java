@@ -1,5 +1,7 @@
 package com.usmb.but3.td4biblio.view;
 
+import com.usmb.but3.td4biblio.dto.AuteurCreateDto;
+import com.usmb.but3.td4biblio.dto.AuteurResponseDto;
 import com.usmb.but3.td4biblio.entity.Auteur;
 import com.usmb.but3.td4biblio.service.AuteurService;
 import com.vaadin.flow.component.button.Button;
@@ -17,6 +19,10 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+
 // MS added for UI unit test : @Component and @Scope("prototype") are needed for the view to be instantiated correctly
 @Component
 @Scope("prototype")
@@ -27,7 +33,7 @@ public class AuteurView extends VerticalLayout {
 
 	private final AuteurService auteurService;
 
-	final Grid<Auteur> grid;
+	final Grid<AuteurResponseDto> grid;
 
 	final TextField filter;
 
@@ -42,7 +48,7 @@ public class AuteurView extends VerticalLayout {
 	public AuteurView(AuteurService auteurService, AuteurEditor editor) {
 		this.auteurService = auteurService;
 		this.editor = editor;
-		this.grid = new Grid<>(Auteur.class);
+		this.grid = new Grid<>(AuteurResponseDto.class);
 		this.filter = new TextField();
 		this.addNewBtn = new Button("Ajouter un auteur", VaadinIcon.PLUS.create());
 
@@ -68,8 +74,7 @@ public class AuteurView extends VerticalLayout {
 		});
 
 		// Instantiate and edit new Customer the new button is clicked
-		// TODO Remettre
-		//addNewBtn.addClickListener(e -> editor.editAuteur(new Auteur(null, "", "", "", null, null)));
+		addNewBtn.addClickListener(e -> editor.editAuteur(new AuteurResponseDto()));
 
 		// Listen changes made by the editor, refresh data from backend
 		editor.setChangeHandler(() -> {

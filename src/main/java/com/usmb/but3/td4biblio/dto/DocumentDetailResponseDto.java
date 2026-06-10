@@ -1,15 +1,18 @@
 package com.usmb.but3.td4biblio.dto;
 
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
-@Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class DocumentCreateDto {
+@Data
+public class DocumentDetailResponseDto {
+    private Integer Id;
     private AuteurResponseDto auteur;
     private EditeurResponseDto editeur;
     private BibliothequeResponseDto bibliotheque;
@@ -23,4 +26,6 @@ public class DocumentCreateDto {
     private LocalDate datePublication;
     private String codeEmplacement;
     private Boolean empruntable;
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
 }
