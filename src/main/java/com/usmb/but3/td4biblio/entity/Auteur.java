@@ -1,10 +1,6 @@
 package com.usmb.but3.td4biblio.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -18,8 +14,7 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @Data
 @Entity
-@Table(name = "auteur")
-
+@Table(name = "auteur", schema = "biblio")
 public class Auteur {
 
     @Id
@@ -31,29 +26,32 @@ public class Auteur {
     private LocalDate dateNaissance;
     private LocalDate dateDeces;
 
+    @ManyToMany
+    @JoinTable(
+            name = "auteur_type_auteur",
+            schema = "biblio",
+            joinColumns = @JoinColumn(name = "auteur_id"),
+            inverseJoinColumns = @JoinColumn(name = "type_auteur_id")
+    )
+    private List<TypeAuteur> typesAuteur;
+
     public boolean isEqualTo(Auteur auteur) {
         if (this == auteur) return true;
         if (auteur == null) return false;
         if (id != null ? !id.equals(auteur.id) : auteur.id != null) return false;
         if (nom != null ? !nom.equals(auteur.nom) : auteur.nom != null) return false;
         if (prenom != null ? !prenom.equals(auteur.prenom) : auteur.prenom != null) return false;
-        if (nationalite != null ? !nationalite.equals(auteur.nationalite) : auteur.nationalite != null)
-            return false;
-        if (dateNaissance != null ? !dateNaissance.equals(auteur.dateNaissance) : auteur.dateNaissance != null)
-            return false;
+        if (nationalite != null ? !nationalite.equals(auteur.nationalite) : auteur.nationalite != null) return false;
+        if (dateNaissance != null ? !dateNaissance.equals(auteur.dateNaissance) : auteur.dateNaissance != null) return false;
         return dateDeces != null ? dateDeces.equals(auteur.dateDeces) : auteur.dateDeces == null;
     }
 
     @Override
     public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
-        Auteur other = (Auteur) obj;
-        return isEqualTo(other);
+        if (this == obj) return true;
+        if (obj == null) return false;
+        if (getClass() != obj.getClass()) return false;
+        return isEqualTo((Auteur) obj);
     }
 
     @Override

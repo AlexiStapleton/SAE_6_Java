@@ -1,12 +1,6 @@
 package com.usmb.but3.td4biblio.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -22,90 +16,42 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Data
 @Entity
-@Table(name = "livre")
+@Table(name = "livre", schema = "biblio")
+@PrimaryKeyJoinColumn(name = "id")
+public class Livre extends Document {
 
-public class Livre {
+    private Integer nbPages;
+    private String codeIsbn;
 
- @Id
- @GeneratedValue(strategy = GenerationType.IDENTITY)
- private Integer id;
- private String titre;
- private Integer nbPages;
- private String editeur;
- private LocalDate datePublication;
+    public boolean isEqualTo(Livre livre) {
+        if (this == livre) return true;
+        if (livre == null) return false;
+        if (getId() != null ? !getId().equals(livre.getId()) : livre.getId() != null) return false;
+        if (getTitre() != null ? !getTitre().equals(livre.getTitre()) : livre.getTitre() != null) return false;
+        if (getAuteur() != null ? !getAuteur().equals(livre.getAuteur()) : livre.getAuteur() != null) return false;
+        if (nbPages != null ? !nbPages.equals(livre.nbPages) : livre.nbPages != null) return false;
+        if (getDatePublication() != null ? !getDatePublication().equals(livre.getDatePublication()) : livre.getDatePublication() != null) return false;
+        return codeIsbn != null ? codeIsbn.equals(livre.codeIsbn) : livre.codeIsbn == null;
+    }
 
- private LocalDateTime createdAt;
- private LocalDateTime updatedAt;
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null) return false;
+        if (getClass() != obj.getClass()) return false;
+        return isEqualTo((Livre) obj);
+    }
 
-@ManyToOne
-@JoinColumn(name = "auteur_id", nullable = false) // Foreign key column in 'livre' table, not nullable
-private Auteur auteur;
-
- public boolean isEqualTo(Livre livre) {
-    if (this == livre) return true;
-    if (livre == null) return false;
-    if (id != null ? !id.equals(livre.id) : livre.id != null) return false;
-    if (titre != null ? !titre.equals(livre.titre) : livre.titre != null) return false;
-    if (auteur != null ? !auteur.equals(livre.auteur) : livre.auteur != null) return false;
-    if (nbPages != null ? !nbPages.equals(livre.nbPages) : livre.nbPages != null) return false;
-    if (editeur != null ? !editeur.equals(livre.editeur) : livre.editeur != null) return false;
-    if (datePublication != null ? !datePublication.equals(livre.datePublication) : livre.datePublication != null) return false;
-    return true;
- }
-
- @Override
- public boolean equals(Object obj) {
-    if (this == obj)
-        return true;
-    if (obj == null)
-        return false;
-    if (getClass() != obj.getClass())
-        return false;
-    Livre other = (Livre) obj;
-    if (id == null) {
-        if (other.id != null)
-            return false;
-    } else if (!id.equals(other.id))
-        return false;
-    if (titre == null) {
-        if (other.titre != null)
-            return false;
-    } else if (!titre.equals(other.titre))
-        return false;
-    if (auteur == null) {
-        if (other.auteur != null)
-            return false;
-    } else if (!auteur.equals(other.auteur))
-        return false;
-    if (nbPages == null) {
-        if (other.nbPages != null)
-            return false;
-    } else if (!nbPages.equals(other.nbPages))
-        return false;
-    if (editeur == null) {
-        if (other.editeur != null)
-            return false;
-    } else if (!editeur.equals(other.editeur))
-        return false;
-    if (datePublication == null) {
-        if (other.datePublication != null)
-            return false;
-    } else if (!datePublication.equals(other.datePublication))
-        return false;
-    return true;
- }
- @Override
- public int hashCode() {
-    final int prime = 31;
-    int result = 1;
-    result = prime * result + ((id == null) ? 0 : id.hashCode());
-    result = prime * result + ((titre == null) ? 0 : titre.hashCode());
-    result = prime * result + ((auteur == null) ? 0 : auteur.hashCode());
-    result = prime * result + ((nbPages == null) ? 0 : nbPages.hashCode());
-    result = prime * result + ((editeur == null) ? 0 : editeur.hashCode());
-    result = prime * result + ((datePublication == null) ? 0 : datePublication.hashCode());
-    return result;
- }
-
- 
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + (getId() == null ? 0 : getId().hashCode());
+        result = prime * result + (getTitre() == null ? 0 : getTitre().hashCode());
+        result = prime * result + (getAuteur() == null ? 0 : getAuteur().hashCode());
+        result = prime * result + (nbPages == null ? 0 : nbPages.hashCode());
+        result = prime * result + (getDatePublication() == null ? 0 : getDatePublication().hashCode());
+        result = prime * result + (codeIsbn == null ? 0 : codeIsbn.hashCode());
+        return result;
+    }
 }
