@@ -5,6 +5,7 @@ import com.usmb.but3.td4biblio.dto.LivreDetailResponseDto;
 import com.usmb.but3.td4biblio.dto.LivreResponseDto;
 import com.usmb.but3.td4biblio.exception.RessourceNotFoundException;
 import com.usmb.but3.td4biblio.mapper.LivreMapper;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -23,41 +24,45 @@ import java.util.Optional;
  * Elle interagit avec la couche Repository pour accéder aux données.
  */
 @Service
-@RequiredArgsConstructor
-@Slf4j
-public class LivreService {
+@Transactional
+public class LivreService
+    extends AbstractGenericService<Livre, Integer, LivreResponseDto, LivreDetailResponseDto, LivreCreateDto>{
 
  private final LivreRepo livreRepo;
- private final LivreMapper livreMapper;
 
- public List<LivreResponseDto> getAllLivres(){
-     //return livreRepo.findAll();
-    // To specify a sort order, use:
-      return livreRepo.findAll(Sort.by(Sort.Direction.ASC, "id"))
-              .stream()
-              .map(livreMapper::toResponse)
-              .toList();
-
+ public LivreService(LivreRepo repository, LivreMapper mapper) {
+     super(repository, mapper);
+     this.livreRepo = repository;
  }
 
- public LivreDetailResponseDto getLivreById(Integer id) {
-    Livre livre = livreRepo.findById(id)
-            .orElseThrow(() -> new RessourceNotFoundException("Le livre introuvable avec l'id : " + id));
+// public List<LivreResponseDto> getAllLivres(){
+//     //return livreRepo.findAll();
+//    // To specify a sort order, use:
+//      return livreRepo.findAll(Sort.by(Sort.Direction.ASC, "id"))
+//              .stream()
+//              .map(mapper::toResponse)
+//              .toList();
+//
+// }
+//
+// public LivreDetailResponseDto getLivreById(Integer id) {
+//    Livre livre = livreRepo.findById(id)
+//            .orElseThrow(() -> new RessourceNotFoundException("Le livre introuvable avec l'id : " + id));
+//
+//    return mapper.toDetailResponse(livre);
+// }
 
-    return livreMapper.toDetailResponse(livre);
- }
+// public LivreResponseDto saveLivre (LivreCreateDto dto) {
+//     Livre livre = mapper.toEntity(dto);
+//     livre.setCreatedAt(LocalDateTime.now());
+//     livre.setUpdatedAt(LocalDateTime.now());
+//
+//     Livre savedLivre = livreRepo.save(livre);
+//     log.info("Livre with id: {} saved successfully", livre.getId());
+//     return mapper.toResponse(savedLivre);
+// }
 
- public LivreResponseDto saveLivre (LivreCreateDto dto) {
-     Livre livre = livreMapper.toEntity(dto);
-     livre.setCreatedAt(LocalDateTime.now());
-     livre.setUpdatedAt(LocalDateTime.now());
-
-     Livre savedLivre = livreRepo.save(livre);
-     log.info("Livre with id: {} saved successfully", livre.getId());
-     return livreMapper.toResponse(savedLivre);
- }
-
- public LivreDetailResponseDto updateLivre (LivreDetailResponseDto dto) {
+ public LivreDetailResponseDto update (LivreDetailResponseDto dto) {
      Livre livre = livreRepo.findById(dto.getId())
              .orElseThrow(() -> new RessourceNotFoundException("Livre introuvable : " + dto.getId()));
 
@@ -69,13 +74,21 @@ public class LivreService {
 
      Livre updatedLivre = livreRepo.save(livre);
 
-     return livreMapper.toDetailResponse(updatedLivre);
+     return mapper.toDetailResponse(updatedLivre);
  }
 
- public void deleteLivreById (Integer id) {
-    livreRepo.deleteById(id);
-    log.info("Livre with id: {} deleted successfully", id);
+ @Override
+ public LivreResponseDto update(Integer id, LivreCreateDto dto) {
+     Livre livre = repository.findById(id)
+             .orElseThrow(() -> new RessourceNotFoundException("Livre non trouvé avec id : " + id));
+
+     return mapper.toResponse(livre);
  }
+
+// public void deleteLivreById (Integer id) {
+//    livreRepo.deleteById(id);
+//    log.info("Livre with id: {} deleted successfully", id);
+// }
 
    public List<LivreResponseDto> getByAuteurId(Integer auteurId) {
       // Get livres by auteurId sorted by id
@@ -83,14 +96,14 @@ public class LivreService {
       //how to sort by id
        return livreRepo.findByAuteurId(auteurId, Sort.by(Sort.Direction.ASC, "id"))
                .stream()
-               .map(livreMapper::toResponse)
+               .map(mapper::toResponse)
                .toList();
    }
 
    public List<LivreResponseDto> getByTitreContainingIgnoreCase(String titre) {
       return livreRepo.findByTitreContainingIgnoreCase(titre)
               .stream()
-              .map(livreMapper::toResponse)
+              .map(mapper::toResponse)
               .toList();
    }
 

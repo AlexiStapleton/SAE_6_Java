@@ -8,7 +8,7 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
 @Mapper( componentModel = "spring", uses = {AuteurMapper.class, EditeurMapper.class, BibliothequeMapper.class, GenreDocumentMapper.class, CodeRaisonMapper.class})
-public interface DvdMapper {
+public interface DvdMapper extends GenericMapper<Dvd, DvdResponseDto, DvdDetailResponseDto, DvdCreateDto> {
 
     @Mapping( source = "auteur.nom", target = "nomAuteur" )
     @Mapping( source = "editeur.nom", target = "nomEditeur" )
@@ -17,6 +17,8 @@ public interface DvdMapper {
     @Mapping( source = "codeRaison.nom", target = "nomRaison" )
     DvdResponseDto toResponse(Dvd dvd);
 
+    @Mapping(source = "editeur", target = "editeur", qualifiedByName = "editeurToResponse")
+    @Mapping(source = "bibliotheque", target = "bibliotheque", qualifiedByName = "bibliothequeToResponse")
     DvdDetailResponseDto toDetailResponse(Dvd dvd);
 
     Dvd toEntity (DvdCreateDto dto);
