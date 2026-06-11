@@ -57,6 +57,11 @@ dependencies {
     // out : 19/06 mockitoAgent 'org.mockito:mockito-core:5.2.0' // or your version
 	// MS added for Hibernate schema generation
 	// MS added for Vaadin
+	implementation 'com.vaadin:vaadin-spring-boot-starter'
+	implementation 'org.springframework.boot:spring-boot-starter-security'
+	implementation 'io.jsonwebtoken:jjwt-api:0.12.6'
+	runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.12.6'
+	runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.12.6'
 
 }
 

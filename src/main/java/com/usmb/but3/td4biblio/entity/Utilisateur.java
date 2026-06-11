@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 
 import java.time.LocalDate;
 
@@ -25,11 +27,14 @@ public class Utilisateur {
     private String numeroCarte;
     private String hashMotDePasse;
 
+
+
     @Enumerated(EnumType.STRING)
+    @JdbcTypeCode(SqlTypes.NAMED_ENUM)
     @Column(name = "role_utilisateur", columnDefinition = "biblio.role_utilisateur")
     private RoleUtilisateur roleUtilisateur;
 
     public enum RoleUtilisateur {
-        BIBLIOTHECAIRE, ADHERENT
+        BIBLIOTHECAIRE, EMPRUNTEUR
     }
 }
