@@ -10,7 +10,7 @@ import org.mapstruct.Mapping;
 @Mapper(componentModel = "spring", uses = {DocumentMapper.class})
 public interface AuteurMapper {
     @Mapping(target = "lesTypes", ignore = true)
-    @Mapping(target = "lesDocuments", ignore = true)
+    @Mapping(target = "documents", ignore = true)
     AuteurResponseDto toResponse(Auteur auteur);
 
     @Mapping( target = "documents", ignore = true)

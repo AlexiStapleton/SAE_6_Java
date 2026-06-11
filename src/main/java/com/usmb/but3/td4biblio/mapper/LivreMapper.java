@@ -7,7 +7,7 @@ import com.usmb.but3.td4biblio.entity.Livre;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
-@Mapper (componentModel = "spring", uses = {DocumentMapper.class, AuteurMapper.class, EditeurMapper.class})
+@Mapper (componentModel = "spring", uses = {AuteurMapper.class, EditeurMapper.class, BibliothequeMapper.class, GenreDocumentMapper.class, CodeRaisonMapper.class})
 public interface LivreMapper {
     @Mapping( source = "auteur.nom", target = "nomAuteur" )
     @Mapping( source = "editeur.nom", target = "nomEditeur" )
@@ -18,10 +18,5 @@ public interface LivreMapper {
 
     LivreDetailResponseDto toDetailResponse(Livre livre);
 
-//    @Mapping(source = "auteurId", target = "auteur.id")
-//    @Mapping(source = "editeurId", target = "editeur.id")
-//    @Mapping(source = "bibliothequeId", target = "bibliotheque.id")
-//    @Mapping(source = "genreDocumentId", target = "genre.id")
-//    @Mapping(source = "codeRaisonId", target = "codeRaison.id")
     Livre toEntity (LivreCreateDto dto);
 }

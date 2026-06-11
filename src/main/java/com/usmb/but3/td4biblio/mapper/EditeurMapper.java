@@ -8,7 +8,7 @@ import org.mapstruct.Mapping;
 
 @Mapper(componentModel = "spring")
 public interface EditeurMapper {
-    @Mapping(target = "lesDocuments", ignore = true)
+    @Mapping(target = "documents", ignore = true)
     EditeurResponseDto toResponse(Editeur editeur);
 
 }

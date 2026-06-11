@@ -16,5 +16,5 @@ public class EditeurResponseDto {
     private String lienSiteWeb;
     private String lienWikipedia;
     private AdresseResponseDto adresse;
-    private List<DocumentResponseDto> lesDocuments;
+    private List<DocumentResponseDto> documents;
 }
