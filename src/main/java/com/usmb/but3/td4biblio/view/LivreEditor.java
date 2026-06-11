@@ -76,14 +76,14 @@ public class LivreEditor extends VerticalLayout implements KeyNotifier {
 		this.auteurService = auteurService;
 		this.editeurService = editeurService;
 
-		editeur.setItems(editeurService.getAllEditeurs());
+		editeur.setItems(editeurService.getAll());
 		editeur.setItemLabelGenerator(EditeurResponseDto::getNom);
 
 
 		auteurComboBox.setPlaceholder("Sélectionner un auteur");
 		auteurComboBox.setClearButtonVisible(true);
 		// do it after :
-		auteurComboBox.setItems(auteurService.getAllAuteurs());
+		auteurComboBox.setItems(auteurService.getAll());
 		auteurComboBox.setItemLabelGenerator(AuteurResponseDto::getDesc);
 
 		add(titre, auteurComboBox, datePublication, editeur, nbPages , actions);
@@ -104,7 +104,7 @@ public class LivreEditor extends VerticalLayout implements KeyNotifier {
 	}
 
 	void delete() {
-		livreService.deleteLivreById(livre.getId());
+		livreService.delete(livre.getId());
 		changeHandler.onChange();
 	}
 
@@ -114,7 +114,7 @@ public class LivreEditor extends VerticalLayout implements KeyNotifier {
 			//livreService.saveLivre(livre);
 		} else {
 			// If the livre already exists, we update it
-			livreService.updateLivre(livre);
+			livreService.update(livre);
 		}
 		changeHandler.onChange();
 	}
@@ -129,14 +129,14 @@ public class LivreEditor extends VerticalLayout implements KeyNotifier {
 			return;
 		}
 
-		auteurComboBox.setItems(auteurService.getAllAuteurs());
+		auteurComboBox.setItems(auteurService.getAll());
 
 		final boolean persisted = l.getId() != null;
 		if (persisted) {
 			// Find fresh entity for editing
 			// In a more complex app, you might want to load
 			// the entity/DTO with lazy loaded relations for editing
-			livre = livreService.getLivreById(l.getId());
+			livre = livreService.getById(l.getId());
 		}
 		else {
 			livre = l;
