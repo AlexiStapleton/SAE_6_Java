@@ -17,6 +17,8 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
+import java.util.ArrayList;
+
 // MS added for UI unit test : @Component and @Scope("prototype") are needed for the view to be instantiated correctly
 @Component
 @Scope("prototype")
@@ -68,7 +70,7 @@ public class AuteurView extends VerticalLayout {
 		});
 
 		// Instantiate and edit new Customer the new button is clicked
-		addNewBtn.addClickListener(e -> editor.editAuteur(new Auteur(null, "", "", "", null, null)));
+		addNewBtn.addClickListener(e -> editor.editAuteur(new Auteur(null, "", "", "", null, null, new ArrayList<>())));
 
 		// Listen changes made by the editor, refresh data from backend
 		editor.setChangeHandler(() -> {

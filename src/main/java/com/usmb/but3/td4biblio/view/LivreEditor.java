@@ -42,7 +42,7 @@ public class LivreEditor extends VerticalLayout implements KeyNotifier {
 
 	/* Fields to edit properties in Livre entity */
 	TextField titre = new TextField("Titre");
-	TextField editeur = new TextField("Editeur");
+	// TextField editeur = new TextField("Editeur");
     DatePicker datePublication = new DatePicker("Date de publication");
     IntegerField nbPages = new IntegerField("Nombre de pages");
     {
@@ -75,7 +75,7 @@ public class LivreEditor extends VerticalLayout implements KeyNotifier {
 		//auteurComboBox.setItems(auteurService.getAllAuteurs());
 		auteurComboBox.setItemLabelGenerator(Auteur::getDesc);
 
-		add(titre, auteurComboBox, datePublication, editeur, nbPages , actions);
+		add(titre, auteurComboBox, datePublication, nbPages , actions);
 
 		// bind using naming convention
 		binder.bindInstanceFields(this);
