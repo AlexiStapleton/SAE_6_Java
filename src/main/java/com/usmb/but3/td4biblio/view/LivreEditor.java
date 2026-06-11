@@ -1,8 +1,12 @@
 package com.usmb.but3.td4biblio.view;
 
+import com.usmb.but3.td4biblio.dto.AuteurResponseDto;
+import com.usmb.but3.td4biblio.dto.EditeurResponseDto;
+import com.usmb.but3.td4biblio.dto.LivreDetailResponseDto;
 import com.usmb.but3.td4biblio.entity.Auteur;
 import com.usmb.but3.td4biblio.entity.Livre;
 import com.usmb.but3.td4biblio.service.AuteurService;
+import com.usmb.but3.td4biblio.service.EditeurService;
 import com.usmb.but3.td4biblio.service.LivreService;
 import com.vaadin.flow.component.Key;
 import com.vaadin.flow.component.KeyNotifier;
@@ -31,29 +35,31 @@ import com.vaadin.flow.spring.annotation.UIScope;
 @UIScope
 public class LivreEditor extends VerticalLayout implements KeyNotifier {
 
-    private final LivreService livreService;
+	private final LivreService livreService;
 	private final AuteurService auteurService;
-	
+	private final EditeurService editeurService;
+
 
 	/**
 	 * The currently edited livre
 	 */
-	private Livre livre;
+	private LivreDetailResponseDto livre;
 
 	/* Fields to edit properties in Livre entity */
 	TextField titre = new TextField("Titre");
-	// TextField editeur = new TextField("Editeur");
-    DatePicker datePublication = new DatePicker("Date de publication");
-    IntegerField nbPages = new IntegerField("Nombre de pages");
-    {
-        nbPages.setMin(1);
-        nbPages.setMax(10000);
-        nbPages.setStep(1);
-        nbPages.setPlaceholder("Nombre de pages");
-        nbPages.setClearButtonVisible(true);
-    }
+	ComboBox<EditeurResponseDto> editeur =
+			new ComboBox<>("Editeur");
+	DatePicker datePublication = new DatePicker("Date de publication");
+	IntegerField nbPages = new IntegerField("Nombre de pages");
+	{
+		nbPages.setMin(1);
+		nbPages.setMax(10000);
+		nbPages.setStep(1);
+		nbPages.setPlaceholder("Nombre de pages");
+		nbPages.setClearButtonVisible(true);
+	}
 
-	ComboBox<Auteur> auteurComboBox = new ComboBox<>("Auteur");
+	ComboBox<AuteurResponseDto> auteurComboBox = new ComboBox<>("Auteur");
 
 	/* Action buttons */
 	Button save = new Button("Sauvegarder", VaadinIcon.CHECK.create());
@@ -61,27 +67,32 @@ public class LivreEditor extends VerticalLayout implements KeyNotifier {
 	Button delete = new Button("Supprimer", VaadinIcon.TRASH.create());
 	HorizontalLayout actions = new HorizontalLayout(save, cancel, delete);
 
-	Binder<Livre> binder = new Binder<>(Livre.class);
+	Binder<LivreDetailResponseDto> binder = new Binder<>(LivreDetailResponseDto.class);
 	private ChangeHandler changeHandler;
 
-	public LivreEditor(AuteurService auteurService, LivreService livreService) {
+	public LivreEditor(AuteurService auteurService, LivreService livreService, EditeurService editeurService) {
 
 		this.livreService = livreService;
 		this.auteurService = auteurService;
+		this.editeurService = editeurService;
+
+		editeur.setItems(editeurService.getAllEditeurs());
+		editeur.setItemLabelGenerator(EditeurResponseDto::getNom);
+
 
 		auteurComboBox.setPlaceholder("Sélectionner un auteur");
 		auteurComboBox.setClearButtonVisible(true);
 		// do it after :
-		//auteurComboBox.setItems(auteurService.getAllAuteurs());
-		auteurComboBox.setItemLabelGenerator(Auteur::getDesc);
+		auteurComboBox.setItems(auteurService.getAllAuteurs());
+		auteurComboBox.setItemLabelGenerator(AuteurResponseDto::getDesc);
 
-		add(titre, auteurComboBox, datePublication, nbPages , actions);
+		add(titre, auteurComboBox, datePublication, editeur, nbPages , actions);
 
 		// bind using naming convention
 		binder.bindInstanceFields(this);
-        binder.forField(auteurComboBox)
-            .asRequired("Auteur est obligatoire")
-            .bind(Livre::getAuteur, Livre::setAuteur);
+		binder.forField(auteurComboBox)
+				.asRequired("Auteur est obligatoire")
+				.bind(LivreDetailResponseDto::getAuteur, LivreDetailResponseDto::setAuteur);
 
 		addKeyPressListener(Key.ENTER, e -> save());
 
@@ -98,21 +109,21 @@ public class LivreEditor extends VerticalLayout implements KeyNotifier {
 	}
 
 	void save() {
-        if (livre.getId() == null) {
-            // If the livre is new, we save it
-            livreService.saveLivre(livre);
-        } else {
-            // If the livre already exists, we update it
-            livreService.updateLivre(livre);
-        }
-        changeHandler.onChange();
+		if (livre.getId() == null) {
+			// If the livre is new, we save it
+			//livreService.saveLivre(livre);
+		} else {
+			// If the livre already exists, we update it
+			livreService.updateLivre(livre);
+		}
+		changeHandler.onChange();
 	}
 
 	public interface ChangeHandler {
 		void onChange();
 	}
 
-	public final void editLivre(Livre l) {
+	public final void editLivre(LivreDetailResponseDto l) {
 		if (l == null) {
 			setVisible(false);
 			return;
@@ -150,4 +161,3 @@ public class LivreEditor extends VerticalLayout implements KeyNotifier {
 	}
 
 }
-

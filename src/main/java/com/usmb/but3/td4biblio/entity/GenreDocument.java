@@ -13,6 +13,6 @@ import lombok.NoArgsConstructor;
 public class GenreDocument {
 
     @Id
-    private Integer id;
+    private Integer Id;
     private String nom;
 }
