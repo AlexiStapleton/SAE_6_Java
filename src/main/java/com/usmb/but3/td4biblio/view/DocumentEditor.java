@@ -81,7 +81,8 @@ public class DocumentEditor extends VerticalLayout implements KeyNotifier {
         this.documentService = documentService;
 
         auteurComboBox.setItems(
-                auteurService.getAllAuteurs());
+                auteurService.getAllAuteurEntities()
+        );
 
         auteurComboBox.setItemLabelGenerator(
                 Auteur::getDesc);
