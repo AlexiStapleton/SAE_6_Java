@@ -91,7 +91,7 @@ public class AuteurView extends VerticalLayout {
 		if (StringUtils.hasText(filterText)) {
 			grid.setItems(auteurService.getByNomContainingIgnoreCase(filterText));
 		} else {
-			grid.setItems(auteurService.getAllAuteurs());
+			grid.setItems(auteurService.getAll());
 		}
 	}
 	// end::listCustomers[]

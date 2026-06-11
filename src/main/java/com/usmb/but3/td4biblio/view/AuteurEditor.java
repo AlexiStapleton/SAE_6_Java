@@ -96,7 +96,7 @@ public class AuteurEditor extends VerticalLayout implements KeyNotifier {
 	}
 
 	void delete() {
-		auteurService.deleteAuteurById(auteur.getId());
+		auteurService.delete(auteur.getId());
 		changeHandler.onChange();
 	}
 
@@ -111,7 +111,7 @@ public class AuteurEditor extends VerticalLayout implements KeyNotifier {
 				auteur.getLienWikipedia(),
 				new ArrayList<>() //TODO mettre les id
 		);
-		auteurService.saveAuteur(createDto);
+		auteurService.create(createDto);
 		changeHandler.onChange();
 	}
 
@@ -129,7 +129,7 @@ public class AuteurEditor extends VerticalLayout implements KeyNotifier {
 			// Find fresh entity for editing
 			// In a more complex app, you might want to load
 			// the entity/DTO with lazy loaded relations for editing
-			auteur = auteurService.getAuteurById(a.getId());
+			auteur = auteurService.getById(a.getId());
 		}
 		else {
 			auteur = a;

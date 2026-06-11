@@ -68,7 +68,7 @@ public class LivreView extends VerticalLayout {
 
 		// Connect selected Livre to editor or hide if none is selected
 		grid.asSingleSelect().addValueChangeListener(e -> {
-			editor.editLivre(livreService.getLivreById(e.getValue().getId()));
+			editor.editLivre(livreService.getById(e.getValue().getId()));
 		});
 
 		// Instantiate and edit new Livre when the new button is clicked
@@ -88,7 +88,7 @@ public class LivreView extends VerticalLayout {
 		if (StringUtils.hasText(filterText)) {
 			grid.setItems(livreService.getByTitreContainingIgnoreCase(filterText));
 		} else {
-			grid.setItems(livreService.getAllLivres());
+			grid.setItems(livreService.getAll());
 		}
 	}
 

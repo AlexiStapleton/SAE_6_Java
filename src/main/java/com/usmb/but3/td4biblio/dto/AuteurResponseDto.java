@@ -20,8 +20,6 @@ public class AuteurResponseDto {
     private String villeNaissance;
     private String lienWikipedia;
 
-    private List<String> lesTypes;
-    private List<DocumentResponseDto> documents;
     public String getDesc() {
         return prenom + " " + nom + " (" + dateNaissance.getYear() + "-" + (dateDeces != null ? dateDeces.getYear() : "en vie") + ")";
     }
