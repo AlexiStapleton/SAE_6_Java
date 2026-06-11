@@ -1,5 +1,7 @@
 package com.usmb.but3.td4biblio.view;
 
+import com.usmb.but3.td4biblio.dto.AuteurCreateDto;
+import com.usmb.but3.td4biblio.dto.AuteurResponseDto;
 import org.springframework.context.annotation.Scope;
 
 import com.usmb.but3.td4biblio.entity.Auteur;
@@ -17,6 +19,8 @@ import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import com.vaadin.flow.spring.annotation.UIScope;
+
+import java.util.ArrayList;
 
 /**
  * A simple example to introduce building forms. As your real application is probably much
@@ -38,7 +42,7 @@ public class AuteurEditor extends VerticalLayout implements KeyNotifier {
 	/**
 	 * The currently edited auteur
 	 */
-	private Auteur auteur;
+	private AuteurResponseDto auteur;
 
 	/* Fields to edit properties in Auteur entity */
 	TextField prenom = new TextField("Prénom");
@@ -65,7 +69,7 @@ public class AuteurEditor extends VerticalLayout implements KeyNotifier {
 	Button delete = new Button("Supprimer", VaadinIcon.TRASH.create());
 	HorizontalLayout actions = new HorizontalLayout(save, cancel, delete);
 
-	Binder<Auteur> binder = new Binder<>(Auteur.class);
+	Binder<AuteurResponseDto> binder = new Binder<>(AuteurResponseDto.class);
 	private ChangeHandler changeHandler;
 
 	public AuteurEditor(AuteurService service) {
@@ -92,12 +96,22 @@ public class AuteurEditor extends VerticalLayout implements KeyNotifier {
 	}
 
 	void delete() {
-		auteurService.deleteAuteurById(auteur.getId());
+		auteurService.delete(auteur.getId());
 		changeHandler.onChange();
 	}
 
 	void save() {
-		auteurService.saveAuteur(auteur);
+		AuteurCreateDto createDto = new AuteurCreateDto(
+				auteur.getNom(),
+				auteur.getPrenom(),
+				auteur.getNationalite(),
+				auteur.getDateNaissance(),
+				auteur.getDateDeces(),
+				auteur.getVilleNaissance(),
+				auteur.getLienWikipedia(),
+				new ArrayList<>() //TODO mettre les id
+		);
+		auteurService.create(createDto);
 		changeHandler.onChange();
 	}
 
@@ -105,7 +119,7 @@ public class AuteurEditor extends VerticalLayout implements KeyNotifier {
 		void onChange();
 	}
 
-	public final void editAuteur(Auteur a) {
+	public final void editAuteur(AuteurResponseDto a) {
 		if (a == null) {
 			setVisible(false);
 			return;
@@ -115,7 +129,7 @@ public class AuteurEditor extends VerticalLayout implements KeyNotifier {
 			// Find fresh entity for editing
 			// In a more complex app, you might want to load
 			// the entity/DTO with lazy loaded relations for editing
-			auteur = auteurService.getAuteurById(a.getId());
+			auteur = auteurService.getById(a.getId());
 		}
 		else {
 			auteur = a;

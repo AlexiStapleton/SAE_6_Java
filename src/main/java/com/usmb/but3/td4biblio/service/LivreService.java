@@ -1,5 +1,11 @@
 package com.usmb.but3.td4biblio.service;
 
+import com.usmb.but3.td4biblio.dto.LivreCreateDto;
+import com.usmb.but3.td4biblio.dto.LivreDetailResponseDto;
+import com.usmb.but3.td4biblio.dto.LivreResponseDto;
+import com.usmb.but3.td4biblio.exception.RessourceNotFoundException;
+import com.usmb.but3.td4biblio.mapper.LivreMapper;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -18,63 +24,87 @@ import java.util.Optional;
  * Elle interagit avec la couche Repository pour accéder aux données.
  */
 @Service
-@RequiredArgsConstructor
-@Slf4j
-public class LivreService {
+@Transactional
+public class LivreService
+    extends AbstractGenericService<Livre, Integer, LivreResponseDto, LivreDetailResponseDto, LivreCreateDto>{
 
  private final LivreRepo livreRepo;
 
- public List<Livre> getAllLivres(){
-     //return livreRepo.findAll();
-    // To specify a sort order, use:
-      return livreRepo.findAll(Sort.by(Sort.Direction.ASC, "id"));
-
+ public LivreService(LivreRepo repository, LivreMapper mapper) {
+     super(repository, mapper);
+     this.livreRepo = repository;
  }
 
- public Livre getLivreById(Integer id) {
-    Optional<Livre> optionalLivre = livreRepo.findById(id);
-    log.debug("id: {}", id);
-    if(optionalLivre.isPresent()){
-        return optionalLivre.get();
-    }
-    log.error("Livre with id: {} doesn't exist", id);
-    return null;
+// public List<LivreResponseDto> getAllLivres(){
+//     //return livreRepo.findAll();
+//    // To specify a sort order, use:
+//      return livreRepo.findAll(Sort.by(Sort.Direction.ASC, "id"))
+//              .stream()
+//              .map(mapper::toResponse)
+//              .toList();
+//
+// }
+//
+// public LivreDetailResponseDto getLivreById(Integer id) {
+//    Livre livre = livreRepo.findById(id)
+//            .orElseThrow(() -> new RessourceNotFoundException("Le livre introuvable avec l'id : " + id));
+//
+//    return mapper.toDetailResponse(livre);
+// }
+
+// public LivreResponseDto saveLivre (LivreCreateDto dto) {
+//     Livre livre = mapper.toEntity(dto);
+//     livre.setCreatedAt(LocalDateTime.now());
+//     livre.setUpdatedAt(LocalDateTime.now());
+//
+//     Livre savedLivre = livreRepo.save(livre);
+//     log.info("Livre with id: {} saved successfully", livre.getId());
+//     return mapper.toResponse(savedLivre);
+// }
+
+ public LivreDetailResponseDto update (LivreDetailResponseDto dto) {
+     Livre livre = livreRepo.findById(dto.getId())
+             .orElseThrow(() -> new RessourceNotFoundException("Livre introuvable : " + dto.getId()));
+
+     livre.setTitre(dto.getTitre());
+     livre.setNbPages(dto.getNbPages());
+     livre.setCodeIsbn(dto.getCodeIsbn());
+     livre.setDatePublication(dto.getDatePublication());
+     livre.setUpdatedAt(LocalDateTime.now());
+
+     Livre updatedLivre = livreRepo.save(livre);
+
+     return mapper.toDetailResponse(updatedLivre);
  }
 
- public Livre saveLivre (Livre livre) {
-    livre.setCreatedAt(LocalDateTime.now());
-    livre.setUpdatedAt(LocalDateTime.now());
-    Livre savedLivre = livreRepo.save(livre);
+ @Override
+ public LivreResponseDto update(Integer id, LivreCreateDto dto) {
+     Livre livre = repository.findById(id)
+             .orElseThrow(() -> new RessourceNotFoundException("Livre non trouvé avec id : " + id));
 
-    log.info("Livre with id: {} saved successfully", livre.getId());
-    return savedLivre;
+     return mapper.toResponse(livre);
  }
 
- public Livre updateLivre (Livre livre) {
-    Optional<Livre> existingLivre = livreRepo.findById(livre.getId());
-    livre.setCreatedAt(existingLivre.get().getCreatedAt());
-    livre.setUpdatedAt(LocalDateTime.now());
+// public void deleteLivreById (Integer id) {
+//    livreRepo.deleteById(id);
+//    log.info("Livre with id: {} deleted successfully", id);
+// }
 
-    Livre updatedLivre = livreRepo.save(livre);
-
-    log.info("Livre with id: {} updated successfully", livre.getId());
-    return updatedLivre;
- }
-
- public void deleteLivreById (Integer id) {
-    livreRepo.deleteById(id);
-    log.info("Livre with id: {} deleted successfully", id);
- }
-
-   public List<Livre> getByAuteurId(Integer auteurId) {
+   public List<LivreResponseDto> getByAuteurId(Integer auteurId) {
       // Get livres by auteurId sorted by id
       //return livreRepo.findByAuteurId(auteurId);
       //how to sort by id
-       return livreRepo.findByAuteurId(auteurId, Sort.by(Sort.Direction.ASC, "id")); 
+       return livreRepo.findByAuteurId(auteurId, Sort.by(Sort.Direction.ASC, "id"))
+               .stream()
+               .map(mapper::toResponse)
+               .toList();
    }
 
-   public List<Livre> getByTitreContainingIgnoreCase(String titre) {
-      return livreRepo.findByTitreContainingIgnoreCase(titre);
+   public List<LivreResponseDto> getByTitreContainingIgnoreCase(String titre) {
+      return livreRepo.findByTitreContainingIgnoreCase(titre)
+              .stream()
+              .map(mapper::toResponse)
+              .toList();
    }
 
 }
