@@ -2,7 +2,7 @@ package com.usmb.but3.td4biblio.view.Users;
 
 import com.usmb.but3.td4biblio.DTO.RegisterRequest;
 import com.usmb.but3.td4biblio.entity.Utilisateur;
-import com.usmb.but3.td4biblio.entity.Utilisateur.RoleUtilisateur;
+import com.usmb.but3.td4biblio.entity.RoleUtilisateur;
 import com.usmb.but3.td4biblio.service.AuthService;
 import com.usmb.but3.td4biblio.service.SessionService;
 import com.vaadin.flow.component.KeyNotifier;

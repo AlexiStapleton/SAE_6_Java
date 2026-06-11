@@ -18,7 +18,6 @@ public interface DvdMapper extends GenericMapper<Dvd, DvdResponseDto, DvdDetailR
     DvdResponseDto toResponse(Dvd dvd);
 
     @Mapping(source = "editeur", target = "editeur", qualifiedByName = "editeurToResponse")
-    @Mapping(source = "bibliotheque", target = "bibliotheque", qualifiedByName = "bibliothequeToResponse")
     DvdDetailResponseDto toDetailResponse(Dvd dvd);
 
     Dvd toEntity (DvdCreateDto dto);

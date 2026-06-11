@@ -1,6 +1,7 @@
 package com.usmb.but3.td4biblio.service;
 
 import com.usmb.but3.td4biblio.dto.EditeurCreateDto;
+import com.usmb.but3.td4biblio.dto.EditeurDetailResponseDto;
 import com.usmb.but3.td4biblio.dto.EditeurResponseDto;
 import com.usmb.but3.td4biblio.dto.LivreCreateDto;
 import com.usmb.but3.td4biblio.entity.Editeur;
@@ -16,7 +17,7 @@ import java.util.List;
 @Service
 @Transactional
 public class EditeurService
-                extends AbstractGenericService<Editeur, Integer, EditeurResponseDto, EditeurResponseDto, EditeurCreateDto>{
+                extends AbstractGenericService<Editeur, Integer, EditeurResponseDto, EditeurDetailResponseDto, EditeurCreateDto>{
     public EditeurService(EditeurRepo repository, EditeurMapper mapper) {
         super(repository, mapper);
     }

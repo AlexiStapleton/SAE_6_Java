@@ -3,6 +3,7 @@ package com.usmb.but3.td4biblio.service;
 import java.util.List;
 
 import com.usmb.but3.td4biblio.dto.AuteurCreateDto;
+import com.usmb.but3.td4biblio.dto.AuteurDetailResponseDto;
 import com.usmb.but3.td4biblio.dto.AuteurResponseDto;
 import com.usmb.but3.td4biblio.entity.Editeur;
 import com.usmb.but3.td4biblio.entity.TypeAuteur;
@@ -22,7 +23,7 @@ import lombok.RequiredArgsConstructor;
 @Service
 @Transactional
 public class AuteurService
-    extends AbstractGenericService<Auteur, Integer, AuteurResponseDto, AuteurResponseDto, AuteurCreateDto>{
+    extends AbstractGenericService<Auteur, Integer, AuteurResponseDto, AuteurDetailResponseDto, AuteurCreateDto>{
 
     private final AuteurRepo auteurRepo;  // ← version typée en plus
     private final TypeAuteurRepo typeAuteurRepo;

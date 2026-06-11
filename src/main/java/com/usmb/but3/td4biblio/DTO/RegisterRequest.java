@@ -1,13 +1,15 @@
 package com.usmb.but3.td4biblio.DTO;
 
-import com.usmb.but3.td4biblio.entity.Utilisateur.RoleUtilisateur;
+import com.usmb.but3.td4biblio.entity.RoleUtilisateur;
 import jakarta.validation.constraints.*;
+import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 import java.time.LocalDate;
 
 @Getter
 @Setter
+@Data
 public class RegisterRequest {
 
     @NotBlank(message = "Le nom est obligatoire")

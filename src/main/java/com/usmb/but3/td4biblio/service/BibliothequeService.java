@@ -1,6 +1,7 @@
 package com.usmb.but3.td4biblio.service;
 
 import com.usmb.but3.td4biblio.dto.BibliothequeCreateDto;
+import com.usmb.but3.td4biblio.dto.BibliothequeDetailResponseDto;
 import com.usmb.but3.td4biblio.dto.BibliothequeResponseDto;
 import com.usmb.but3.td4biblio.entity.Bibliotheque;
 import com.usmb.but3.td4biblio.exception.RessourceNotFoundException;
@@ -12,7 +13,7 @@ import org.springframework.stereotype.Service;
 @Service
 @Transactional
 public class BibliothequeService
-        extends AbstractGenericService<Bibliotheque, Integer, BibliothequeResponseDto, BibliothequeResponseDto, BibliothequeCreateDto> {
+        extends AbstractGenericService<Bibliotheque, Integer, BibliothequeResponseDto, BibliothequeDetailResponseDto, BibliothequeCreateDto> {
 
     public BibliothequeService (BibliothequeRepo repository, BibliothequeMapper mapper) {
         super(repository, mapper);
