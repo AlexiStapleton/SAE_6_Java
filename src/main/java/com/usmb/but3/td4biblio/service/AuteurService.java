@@ -132,4 +132,10 @@ public class AuteurService
                .toList();
     }
 
+    public List<Auteur> getAllAuteurEntities() {
+        return auteurRepo.findAll(
+            Sort.by(Sort.Direction.ASC, "id")
+        );
+    }
+
 }
