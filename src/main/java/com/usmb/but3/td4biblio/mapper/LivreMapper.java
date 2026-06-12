@@ -18,7 +18,6 @@ public interface LivreMapper extends GenericMapper <Livre, LivreResponseDto, Liv
 
     @Mapping(source = "editeur", target = "editeur", qualifiedByName = "editeurToResponse")
     @Mapping(source = "auteur", target = "auteur", qualifiedByName = "auteurToResponse")
-    @Mapping(source = "bibliotheque", target = "bibliotheque", qualifiedByName = "bibliothequeToResponse")
     LivreDetailResponseDto toDetailResponse(Livre livre);
 
     Livre toEntity (LivreCreateDto dto);

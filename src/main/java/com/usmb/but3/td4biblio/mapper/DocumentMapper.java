@@ -19,7 +19,6 @@ public interface DocumentMapper extends GenericMapper <Document, DocumentRespons
     DocumentResponseDto toResponse(Document document);
 
     @Mapping(source = "editeur", target = "editeur", qualifiedByName = "editeurToResponse")
-    @Mapping(source = "bibliotheque", target = "bibliotheque", qualifiedByName = "bibliothequeToResponse")
     DocumentDetailResponseDto toDetailResponse(Document document);
 
     Document toEntity (DocumentCreateDto dto);

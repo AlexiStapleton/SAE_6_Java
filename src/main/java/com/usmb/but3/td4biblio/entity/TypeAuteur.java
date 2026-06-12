@@ -5,6 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
@@ -16,4 +18,7 @@ public class TypeAuteur {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer Id;
     private String nom;
+
+    @ManyToMany(mappedBy = "typesAuteur")
+    private List<Auteur> auteurs;
 }
