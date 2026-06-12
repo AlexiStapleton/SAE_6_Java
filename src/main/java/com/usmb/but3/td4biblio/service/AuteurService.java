@@ -2,22 +2,16 @@ package com.usmb.but3.td4biblio.service;
 
 import java.util.List;
 
-import com.usmb.but3.td4biblio.dto.AuteurCreateDto;
-import com.usmb.but3.td4biblio.dto.AuteurResponseDto;
-import com.usmb.but3.td4biblio.entity.Editeur;
-import com.usmb.but3.td4biblio.entity.TypeAuteur;
+import com.usmb.but3.td4biblio.DTO.AuteurCreateDto;
+import com.usmb.but3.td4biblio.DTO.AuteurResponseDto;
 import com.usmb.but3.td4biblio.exception.RessourceNotFoundException;
 import com.usmb.but3.td4biblio.mapper.AuteurMapper;
 import com.usmb.but3.td4biblio.repository.TypeAuteurRepo;
 import jakarta.transaction.Transactional;
-import org.springframework.data.domain.Sort;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.usmb.but3.td4biblio.entity.Auteur;
 import com.usmb.but3.td4biblio.repository.AuteurRepo;
-
-import lombok.RequiredArgsConstructor;
 
 @Service
 @Transactional

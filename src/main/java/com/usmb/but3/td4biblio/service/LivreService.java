@@ -1,13 +1,11 @@
 package com.usmb.but3.td4biblio.service;
 
-import com.usmb.but3.td4biblio.dto.LivreCreateDto;
-import com.usmb.but3.td4biblio.dto.LivreDetailResponseDto;
-import com.usmb.but3.td4biblio.dto.LivreResponseDto;
+import com.usmb.but3.td4biblio.DTO.LivreCreateDto;
+import com.usmb.but3.td4biblio.DTO.LivreDetailResponseDto;
+import com.usmb.but3.td4biblio.DTO.LivreResponseDto;
 import com.usmb.but3.td4biblio.exception.RessourceNotFoundException;
 import com.usmb.but3.td4biblio.mapper.LivreMapper;
 import jakarta.transaction.Transactional;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -17,7 +15,6 @@ import com.usmb.but3.td4biblio.repository.LivreRepo;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 
 /**
  * La couche Service où se trouve toute la logique métier de l'application.

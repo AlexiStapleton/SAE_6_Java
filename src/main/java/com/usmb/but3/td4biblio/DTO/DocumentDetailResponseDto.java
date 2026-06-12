@@ -1,4 +1,4 @@
-package com.usmb.but3.td4biblio.dto;
+package com.usmb.but3.td4biblio.DTO;
 
 
 import lombok.AllArgsConstructor;

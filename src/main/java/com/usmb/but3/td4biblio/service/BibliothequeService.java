@@ -1,7 +1,7 @@
 package com.usmb.but3.td4biblio.service;
 
-import com.usmb.but3.td4biblio.dto.BibliothequeCreateDto;
-import com.usmb.but3.td4biblio.dto.BibliothequeResponseDto;
+import com.usmb.but3.td4biblio.DTO.BibliothequeCreateDto;
+import com.usmb.but3.td4biblio.DTO.BibliothequeResponseDto;
 import com.usmb.but3.td4biblio.entity.Bibliotheque;
 import com.usmb.but3.td4biblio.exception.RessourceNotFoundException;
 import com.usmb.but3.td4biblio.mapper.BibliothequeMapper;

@@ -1,10 +1,8 @@
 package com.usmb.but3.td4biblio.view;
 
-import com.usmb.but3.td4biblio.dto.AuteurResponseDto;
-import com.usmb.but3.td4biblio.dto.EditeurResponseDto;
-import com.usmb.but3.td4biblio.dto.LivreDetailResponseDto;
-import com.usmb.but3.td4biblio.entity.Auteur;
-import com.usmb.but3.td4biblio.entity.Livre;
+import com.usmb.but3.td4biblio.DTO.AuteurResponseDto;
+import com.usmb.but3.td4biblio.DTO.EditeurResponseDto;
+import com.usmb.but3.td4biblio.DTO.LivreDetailResponseDto;
 import com.usmb.but3.td4biblio.service.AuteurService;
 import com.usmb.but3.td4biblio.service.EditeurService;
 import com.usmb.but3.td4biblio.service.LivreService;

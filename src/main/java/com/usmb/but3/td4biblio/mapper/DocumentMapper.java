@@ -1,9 +1,8 @@
 package com.usmb.but3.td4biblio.mapper;
 
-import com.usmb.but3.td4biblio.dto.DocumentCreateDto;
-import com.usmb.but3.td4biblio.dto.DocumentDetailResponseDto;
-import com.usmb.but3.td4biblio.dto.DocumentResponseDto;
-import com.usmb.but3.td4biblio.dto.GenreDocumentResponseDto;
+import com.usmb.but3.td4biblio.DTO.DocumentCreateDto;
+import com.usmb.but3.td4biblio.DTO.DocumentDetailResponseDto;
+import com.usmb.but3.td4biblio.DTO.DocumentResponseDto;
 import com.usmb.but3.td4biblio.entity.Document;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;

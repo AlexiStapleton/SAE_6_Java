@@ -1,4 +1,4 @@
-package com.usmb.but3.td4biblio.dto;
+package com.usmb.but3.td4biblio.DTO;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -9,6 +9,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
-public class DvdResponseDto extends DocumentResponseDto {
+public class DvdCreateDto extends DocumentCreateDto {
     private Integer duree;
 }

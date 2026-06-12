@@ -1,10 +1,7 @@
 package com.usmb.but3.td4biblio.view;
 
-import com.usmb.but3.td4biblio.dto.AuteurResponseDto;
-import com.usmb.but3.td4biblio.dto.LivreDetailResponseDto;
-import com.usmb.but3.td4biblio.dto.LivreResponseDto;
-import com.usmb.but3.td4biblio.entity.Auteur;
-import com.usmb.but3.td4biblio.entity.Livre;
+import com.usmb.but3.td4biblio.DTO.LivreDetailResponseDto;
+import com.usmb.but3.td4biblio.DTO.LivreResponseDto;
 import com.usmb.but3.td4biblio.service.LivreService;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.grid.Grid;

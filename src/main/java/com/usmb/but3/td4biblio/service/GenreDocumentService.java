@@ -1,7 +1,7 @@
 package com.usmb.but3.td4biblio.service;
 
-import com.usmb.but3.td4biblio.dto.GenreDocumentCreateDto;
-import com.usmb.but3.td4biblio.dto.GenreDocumentResponseDto;
+import com.usmb.but3.td4biblio.DTO.GenreDocumentCreateDto;
+import com.usmb.but3.td4biblio.DTO.GenreDocumentResponseDto;
 import com.usmb.but3.td4biblio.entity.GenreDocument;
 import com.usmb.but3.td4biblio.exception.RessourceNotFoundException;
 import com.usmb.but3.td4biblio.mapper.GenreDocumentMapper;

@@ -1,8 +1,6 @@
 package com.usmb.but3.td4biblio.view;
 
-import com.usmb.but3.td4biblio.dto.AuteurCreateDto;
-import com.usmb.but3.td4biblio.dto.AuteurResponseDto;
-import com.usmb.but3.td4biblio.entity.Auteur;
+import com.usmb.but3.td4biblio.DTO.AuteurResponseDto;
 import com.usmb.but3.td4biblio.service.AuteurService;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.grid.Grid;
@@ -18,10 +16,6 @@ import com.vaadin.flow.router.Route;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
-
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
 
 // MS added for UI unit test : @Component and @Scope("prototype") are needed for the view to be instantiated correctly
 @Component

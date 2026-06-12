@@ -1,8 +1,8 @@
 package com.usmb.but3.td4biblio.mapper;
 
-import com.usmb.but3.td4biblio.dto.DvdCreateDto;
-import com.usmb.but3.td4biblio.dto.DvdDetailResponseDto;
-import com.usmb.but3.td4biblio.dto.DvdResponseDto;
+import com.usmb.but3.td4biblio.DTO.DvdCreateDto;
+import com.usmb.but3.td4biblio.DTO.DvdDetailResponseDto;
+import com.usmb.but3.td4biblio.DTO.DvdResponseDto;
 import com.usmb.but3.td4biblio.entity.Dvd;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;

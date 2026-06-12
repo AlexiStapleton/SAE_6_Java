@@ -1,11 +1,9 @@
 package com.usmb.but3.td4biblio.mapper;
 
-import com.usmb.but3.td4biblio.dto.EditeurCreateDto;
-import com.usmb.but3.td4biblio.dto.EditeurResponseDto;
+import com.usmb.but3.td4biblio.DTO.EditeurCreateDto;
+import com.usmb.but3.td4biblio.DTO.EditeurResponseDto;
 import com.usmb.but3.td4biblio.entity.Editeur;
-import com.usmb.but3.td4biblio.entity.TypeAuteur;
 import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
 import org.mapstruct.Named;
 
 @Mapper(componentModel = "spring", uses = {AdresseMapper.class})

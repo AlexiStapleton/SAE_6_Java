@@ -1,7 +1,7 @@
 package com.usmb.but3.td4biblio.mapper;
 
-import com.usmb.but3.td4biblio.dto.AuteurCreateDto;
-import com.usmb.but3.td4biblio.dto.AuteurResponseDto;
+import com.usmb.but3.td4biblio.DTO.AuteurCreateDto;
+import com.usmb.but3.td4biblio.DTO.AuteurResponseDto;
 import com.usmb.but3.td4biblio.entity.Auteur;
 import com.usmb.but3.td4biblio.entity.TypeAuteur;
 import org.mapstruct.Mapper;

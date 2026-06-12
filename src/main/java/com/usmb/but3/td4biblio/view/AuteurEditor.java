@@ -1,10 +1,9 @@
 package com.usmb.but3.td4biblio.view;
 
-import com.usmb.but3.td4biblio.dto.AuteurCreateDto;
-import com.usmb.but3.td4biblio.dto.AuteurResponseDto;
+import com.usmb.but3.td4biblio.DTO.AuteurCreateDto;
+import com.usmb.but3.td4biblio.DTO.AuteurResponseDto;
 import org.springframework.context.annotation.Scope;
 
-import com.usmb.but3.td4biblio.entity.Auteur;
 import com.usmb.but3.td4biblio.service.AuteurService;
 import com.vaadin.flow.component.Key;
 import com.vaadin.flow.component.KeyNotifier;

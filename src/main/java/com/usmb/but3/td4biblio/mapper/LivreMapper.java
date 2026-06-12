@@ -1,8 +1,8 @@
 package com.usmb.but3.td4biblio.mapper;
 
-import com.usmb.but3.td4biblio.dto.LivreCreateDto;
-import com.usmb.but3.td4biblio.dto.LivreDetailResponseDto;
-import com.usmb.but3.td4biblio.dto.LivreResponseDto;
+import com.usmb.but3.td4biblio.DTO.LivreCreateDto;
+import com.usmb.but3.td4biblio.DTO.LivreDetailResponseDto;
+import com.usmb.but3.td4biblio.DTO.LivreResponseDto;
 import com.usmb.but3.td4biblio.entity.Livre;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
