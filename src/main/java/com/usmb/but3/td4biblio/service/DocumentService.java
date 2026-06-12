@@ -9,7 +9,6 @@ import com.usmb.but3.td4biblio.mapper.DocumentMapper;
 import com.usmb.but3.td4biblio.repository.DocumentRepo;
 
 import jakarta.transaction.Transactional;
-
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -18,31 +17,43 @@ import java.util.List;
 @Transactional
 public class DocumentService
         extends AbstractGenericService<
-        Document,
-        Integer,
-        DocumentResponseDto,
-        DocumentDetailResponseDto,
-        DocumentCreateDto> {
+            Document,
+            Integer,
+            DocumentResponseDto,
+            DocumentDetailResponseDto,
+            DocumentCreateDto> {
 
     private final DocumentRepo documentRepo;
 
-    public DocumentService(
-            DocumentRepo repository,
-            DocumentMapper mapper) {
-
+    public DocumentService(DocumentRepo repository, DocumentMapper mapper) {
         super(repository, mapper);
         this.documentRepo = repository;
     }
 
-    @Override
-    public DocumentResponseDto update(
-            Integer id,
-            DocumentCreateDto dto) {
+    // -------------------------------------------------------------------------
+    // Fonctionnalités actives : getAll(), getById(), searchByTitre()
+    // getAll() et getById() sont héritées de AbstractGenericService
+    // -------------------------------------------------------------------------
 
+    /**
+     * Recherche des documents dont le titre contient la chaîne donnée (insensible à la casse).
+     */
+    public List<DocumentResponseDto> searchByTitre(String titre) {
+        return documentRepo
+                .findByTitreContainingIgnoreCase(titre)
+                .stream()
+                .map(mapper::toResponse)
+                .toList();
+    }
+
+    // -------------------------------------------------------------------------
+    // update() obligatoire (méthode abstraite) — non exposé en vue pour l'instant
+    // -------------------------------------------------------------------------
+
+    @Override
+    public DocumentResponseDto update(Integer id, DocumentCreateDto dto) {
         Document document = documentRepo.findById(id)
-                .orElseThrow(() ->
-                        new RessourceNotFoundException(
-                                "Document non trouvé : " + id));
+                .orElseThrow(() -> new RessourceNotFoundException("Document non trouvé : " + id));
 
         document.setTitre(dto.getTitre());
         document.setGif(dto.getGif());
@@ -53,27 +64,6 @@ public class DocumentService
         document.setCodeEmplacement(dto.getCodeEmplacement());
         document.setEmpruntable(dto.getEmpruntable());
 
-        return mapper.toResponse(
-                documentRepo.save(document));
-    }
-
-    public List<DocumentResponseDto> searchByTitre(
-            String titre) {
-
-        return documentRepo
-                .findByTitreContainingIgnoreCase(titre)
-                .stream()
-                .map(mapper::toResponse)
-                .toList();
-    }
-
-    public List<DocumentResponseDto> searchByTitreStartsWith(
-            String titre) {
-
-        return documentRepo
-                .findByTitreStartsWithIgnoreCase(titre)
-                .stream()
-                .map(mapper::toResponse)
-                .toList();
+        return mapper.toResponse(documentRepo.save(document));
     }
 }

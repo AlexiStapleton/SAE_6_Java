@@ -1,8 +1,7 @@
 package com.usmb.but3.td4biblio.view;
 
-import com.usmb.but3.td4biblio.entity.Auteur;
-import com.usmb.but3.td4biblio.entity.Document;
-import com.usmb.but3.td4biblio.service.AuteurService;
+import com.usmb.but3.td4biblio.dto.DocumentDetailResponseDto;
+import com.usmb.but3.td4biblio.dto.DocumentResponseDto;
 import com.usmb.but3.td4biblio.service.DocumentService;
 import com.vaadin.flow.component.Key;
 import com.vaadin.flow.component.KeyNotifier;
@@ -14,87 +13,76 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextArea;
 import com.vaadin.flow.component.textfield.TextField;
-import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import com.vaadin.flow.spring.annotation.UIScope;
 
+/**
+ * Éditeur de Document — même architecture qu'AuteurEditor.
+ *
+ * Travaille exclusivement avec DocumentDetailResponseDto pour l'affichage du détail
+ * (récupéré via getById()) mais accepte un DocumentResponseDto en entrée (depuis la grille).
+ *
+ * Les fonctionnalités save/delete ne sont pas encore activées (hors périmètre sprint actuel).
+ */
 @SpringComponent
 @UIScope
 public class DocumentEditor extends VerticalLayout implements KeyNotifier {
 
     private final DocumentService documentService;
-    private final AuteurService auteurService;
 
-    private Document document;
+    /** Le DTO de détail actuellement affiché */
+    private DocumentDetailResponseDto document;
 
-    // Champs Document
-    TextField titre = new TextField("Titre");
+    // ------------------------------------------------------------------
+    // Champs du formulaire — nommés pour correspondre aux propriétés du DTO
+    // ------------------------------------------------------------------
+    TextField titre            = new TextField("Titre");
+    TextField nomAuteur        = new TextField("Auteur");
+    TextField nomEditeur       = new TextField("Éditeur");
+    TextField nomBibliotheque  = new TextField("Bibliothèque");
+    TextField nomGenreDocument = new TextField("Genre");
+    TextField format           = new TextField("Format");
+    TextField gif              = new TextField("Gif");
+    TextField codeEmplacement  = new TextField("Code emplacement");
+    TextArea  description      = new TextArea("Description");
+    DatePicker datePublication = new DatePicker("Date de publication");
+    DatePicker dateAcquisition = new DatePicker("Date d'acquisition");
+    Checkbox  empruntable      = new Checkbox("Empruntable");
 
-    TextField format = new TextField("Format");
-
-    TextField gif = new TextField("Gif");
-
-    TextField codeEmplacement =
-            new TextField("Code emplacement");
-
-    TextArea description =
-            new TextArea("Description");
-
-    DatePicker datePublication =
-            new DatePicker("Date publication");
-
-    DatePicker dateAcquisition =
-            new DatePicker("Date acquisition");
-
-    Checkbox empruntable =
-            new Checkbox("Empruntable");
-
-    ComboBox<Auteur> auteurComboBox =
-            new ComboBox<>("Auteur");
-
+    // ------------------------------------------------------------------
     // Boutons
-    Button save =
-            new Button("Sauvegarder",
-                    VaadinIcon.CHECK.create());
+    // ------------------------------------------------------------------
+    Button cancel = new Button("Fermer", VaadinIcon.CLOSE.create());
+    HorizontalLayout actions = new HorizontalLayout(cancel);
 
-    Button cancel =
-            new Button("Annuler");
-
-    Button delete =
-            new Button("Supprimer",
-                    VaadinIcon.TRASH.create());
-
-    HorizontalLayout actions =
-            new HorizontalLayout(save, cancel, delete);
-
-    Binder<Document> binder =
-            new Binder<>(Document.class);
+    Binder<DocumentDetailResponseDto> binder = new Binder<>(DocumentDetailResponseDto.class);
 
     private ChangeHandler changeHandler;
 
-    public DocumentEditor(
-            AuteurService auteurService,
-            DocumentService documentService) {
-
-        this.auteurService = auteurService;
+    public DocumentEditor(DocumentService documentService) {
         this.documentService = documentService;
 
-        auteurComboBox.setItems(
-                auteurService.getAllAuteurEntities()
-        );
-
-        auteurComboBox.setItemLabelGenerator(
-                Auteur::getDesc);
-
-        auteurComboBox.setPlaceholder(
-                "Sélectionner un auteur");
-
-        auteurComboBox.setClearButtonVisible(true);
+        // Tous les champs en lecture seule (affichage uniquement pour ce sprint)
+        titre.setReadOnly(true);
+        nomAuteur.setReadOnly(true);
+        nomEditeur.setReadOnly(true);
+        nomBibliotheque.setReadOnly(true);
+        nomGenreDocument.setReadOnly(true);
+        format.setReadOnly(true);
+        gif.setReadOnly(true);
+        codeEmplacement.setReadOnly(true);
+        description.setReadOnly(true);
+        datePublication.setReadOnly(true);
+        dateAcquisition.setReadOnly(true);
+        empruntable.setReadOnly(true);
 
         add(
                 titre,
-                auteurComboBox,
+                nomAuteur,
+                nomEditeur,
+                nomBibliotheque,
+                nomGenreDocument,
                 format,
                 gif,
                 codeEmplacement,
@@ -105,66 +93,43 @@ public class DocumentEditor extends VerticalLayout implements KeyNotifier {
                 actions
         );
 
+        // Liaison automatique par convention de nommage
         binder.bindInstanceFields(this);
 
-        binder.forField(auteurComboBox)
-                .asRequired("Auteur obligatoire")
-                .bind(
-                        Document::getAuteur,
-                        Document::setAuteur
-                );
-
-        save.addClickListener(e -> save());
-
-        delete.addClickListener(e -> delete());
-
-        cancel.addClickListener(
-                e -> editDocument(document));
-
-        addKeyPressListener(
-                Key.ENTER,
-                e -> save());
+        cancel.addClickListener(e -> setVisible(false));
+        addKeyPressListener(Key.ESCAPE, e -> setVisible(false));
 
         setVisible(false);
     }
-
-        void save() {
-                changeHandler.onChange();
-        }
-
-        void delete() {
-                changeHandler.onChange();
-        }
 
     public interface ChangeHandler {
         void onChange();
     }
 
-    public final void editDocument(Document d) {
-
-        if(d == null) {
+    /**
+     * Reçoit un DocumentResponseDto depuis la grille, charge le détail complet
+     * via getById() et affiche le formulaire — exactement comme AuteurEditor.editAuteur().
+     */
+    public final void editDocument(DocumentResponseDto dto) {
+        if (dto == null) {
             setVisible(false);
             return;
         }
 
-        final boolean persisted =
-                d.getId() != null;
+        final boolean persisted = dto.getId() != null;
 
-        if(persisted) {
-            document =
-                    documentService.getById(
-                            d.getId());
-        }
-        else {
-            document = d;
+        if (persisted) {
+            // Charge le détail complet depuis le service (getById héritée retourne DetailDto)
+            document = documentService.getById(dto.getId());
+        } else {
+            // Nouveau document : DTO de détail vide
+            document = new DocumentDetailResponseDto();
         }
 
         cancel.setVisible(persisted);
 
         binder.setBean(document);
-
         setVisible(true);
-
         titre.focus();
     }
 
