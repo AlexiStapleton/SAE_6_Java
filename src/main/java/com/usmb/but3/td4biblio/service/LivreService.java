@@ -26,7 +26,7 @@ import java.util.Optional;
 @Service
 @Transactional
 public class LivreService
-    extends AbstractGenericService<Livre, Integer, LivreResponseDto, LivreDetailResponseDto, LivreCreateDto>{
+    extends AbstractDocumentService<Livre, LivreResponseDto, LivreDetailResponseDto, LivreCreateDto>{
 
     private final LivreRepo livreRepo;
  public LivreService(LivreRepo repository,
@@ -45,6 +45,7 @@ public class LivreService
              codeRaisonRepository);
      livreRepo = repository;
  }
+
 
    public List<LivreResponseDto> getByAuteurId(Integer auteurId) {
       // Get livres by auteurId sorted by id
