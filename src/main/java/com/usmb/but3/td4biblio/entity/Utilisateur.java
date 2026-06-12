@@ -40,7 +40,4 @@ public class Utilisateur {
     @Column(name = "role_utilisateur", columnDefinition = "biblio.role_utilisateur")
     private RoleUtilisateur roleUtilisateur;
 
-//    public enum RoleUtilisateur {
-//        BIBLIOTHECAIRE, EMPRUNTEUR
-//    }
 }

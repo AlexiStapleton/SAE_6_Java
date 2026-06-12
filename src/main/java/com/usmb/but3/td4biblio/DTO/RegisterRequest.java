@@ -1,4 +1,4 @@
-package com.usmb.but3.td4biblio.DTO;
+package com.usmb.but3.td4biblio.dto;
 
 import com.usmb.but3.td4biblio.entity.RoleUtilisateur;
 import jakarta.validation.constraints.*;
