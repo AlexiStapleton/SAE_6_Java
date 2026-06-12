@@ -1,12 +1,10 @@
 package com.usmb.but3.td4biblio.view.Users;
 
-import com.usmb.but3.td4biblio.dto.RegisterRequest;
-import com.usmb.but3.td4biblio.entity.Utilisateur;
+import com.usmb.but3.td4biblio.DTO.RegisterRequest;
 import com.usmb.but3.td4biblio.entity.RoleUtilisateur;
-import com.usmb.but3.td4biblio.service.AuthService;
 import com.usmb.but3.td4biblio.service.SessionService;
+import com.usmb.but3.td4biblio.service.UtilisateurService;
 import com.vaadin.flow.component.KeyNotifier;
-import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.combobox.ComboBox;
@@ -18,7 +16,6 @@ import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.EmailField;
-import com.vaadin.flow.component.textfield.PasswordField;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.data.binder.ValidationException;
@@ -31,24 +28,28 @@ import com.vaadin.flow.spring.annotation.UIScope;
 @UIScope
 public class RegisterEditor extends VerticalLayout implements KeyNotifier {
 
-    private final AuthService authService;
+    private final UtilisateurService utilisateurService;
     private final SessionService sessionService;
 
     private final TextField nom = new TextField("Nom");
     private final TextField prenom = new TextField("Prénom");
     private final EmailField email = new EmailField("Email");
-    private final PasswordField password = new PasswordField("Mot de passe");
     private final DatePicker dateNaissance = new DatePicker("Date de naissance");
     private final TextField numeroCarte = new TextField("Numéro de carte");
     private final ComboBox<RoleUtilisateur> roleUtilisateur = new ComboBox<>("Rôle");
+
+    // Champs adresse
+    private final TextField rue = new TextField("Rue");
+    private final TextField codePostal = new TextField("Code postal");
+    private final TextField ville = new TextField("Ville");
 
     private final Button saveBtn = new Button("Créer le compte");
     private final Button cancelBtn = new Button("Annuler");
 
     private final Binder<RegisterRequest> binder = new Binder<>(RegisterRequest.class);
 
-    public RegisterEditor(AuthService authService, SessionService sessionService) {
-        this.authService = authService;
+    public RegisterEditor(UtilisateurService utilisateurService, SessionService sessionService) {
+        this.utilisateurService = utilisateurService;
         this.sessionService = sessionService;
 
         roleUtilisateur.setItems(RoleUtilisateur.values());
@@ -63,9 +64,10 @@ public class RegisterEditor extends VerticalLayout implements KeyNotifier {
         cancelBtn.addClickListener(e -> clearForm());
 
         FormLayout form = new FormLayout(
-                nom, prenom, email, password,
+                nom, prenom, email,
                 dateNaissance,
-                numeroCarte, roleUtilisateur
+                numeroCarte, roleUtilisateur,
+                rue, codePostal, ville
         );
         form.setResponsiveSteps(
                 new FormLayout.ResponsiveStep("0", 1),
@@ -93,11 +95,6 @@ public class RegisterEditor extends VerticalLayout implements KeyNotifier {
                 .withValidator(new EmailValidator("Email invalide"))
                 .bind(RegisterRequest::getEmail, RegisterRequest::setEmail);
 
-        binder.forField(password)
-                .asRequired("Le mot de passe est obligatoire")
-                .withValidator(p -> p.length() >= 8, "Minimum 8 caractères")
-                .bind(RegisterRequest::getPassword, RegisterRequest::setPassword);
-
         binder.forField(dateNaissance)
                 .asRequired("La date de naissance est obligatoire")
                 .bind(RegisterRequest::getDateNaissance, RegisterRequest::setDateNaissance);
@@ -108,6 +105,18 @@ public class RegisterEditor extends VerticalLayout implements KeyNotifier {
         binder.forField(roleUtilisateur)
                 .asRequired("Le rôle est obligatoire")
                 .bind(RegisterRequest::getRoleUtilisateur, RegisterRequest::setRoleUtilisateur);
+
+        binder.forField(rue)
+                .asRequired("La rue est obligatoire")
+                .bind(RegisterRequest::getRue, RegisterRequest::setRue);
+
+        binder.forField(codePostal)
+                .asRequired("Le code postal est obligatoire")
+                .bind(RegisterRequest::getCodePostal, RegisterRequest::setCodePostal);
+
+        binder.forField(ville)
+                .asRequired("La ville est obligatoire")
+                .bind(RegisterRequest::getVille, RegisterRequest::setVille);
     }
 
     private void save() {
@@ -115,14 +124,10 @@ public class RegisterEditor extends VerticalLayout implements KeyNotifier {
             RegisterRequest dto = new RegisterRequest();
             binder.writeBean(dto);
 
-            Utilisateur created = authService.register(dto);
-
-            sessionService.login(created);
-
+            utilisateurService.register(dto);
             Notification.show("Compte créé avec succès !")
                     .addThemeVariants(NotificationVariant.LUMO_SUCCESS);
-
-            UI.getCurrent().navigate("auteur");
+            clearForm();
         } catch (ValidationException e) {
             Notification.show("Veuillez corriger les erreurs du formulaire.")
                     .addThemeVariants(NotificationVariant.LUMO_ERROR);

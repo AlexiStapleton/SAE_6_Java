@@ -1,4 +1,4 @@
-package com.usmb.but3.td4biblio.dto;
+package com.usmb.but3.td4biblio.DTO;
 
 import com.usmb.but3.td4biblio.entity.RoleUtilisateur;
 import jakarta.validation.constraints.*;
@@ -11,7 +11,6 @@ import java.time.LocalDate;
 @Setter
 @Data
 public class RegisterRequest {
-
     @NotBlank(message = "Le nom est obligatoire")
     private String nom;
 
@@ -22,10 +21,6 @@ public class RegisterRequest {
     @Email(message = "L'email n'est pas valide")
     private String email;
 
-    @NotBlank(message = "Le mot de passe est obligatoire")
-    @Size(min = 8, message = "Le mot de passe doit contenir au moins 8 caractères")
-    private String password;
-
     @NotNull(message = "La date de naissance est obligatoire")
     @Past(message = "La date de naissance doit être dans le passé")
     private LocalDate dateNaissance;
@@ -34,4 +29,14 @@ public class RegisterRequest {
 
     @NotNull(message = "Le rôle est obligatoire")
     private RoleUtilisateur roleUtilisateur;
+
+    // Champs adresse
+    @NotBlank(message = "La rue est obligatoire")
+    private String rue;
+
+    @NotBlank(message = "Le code postal est obligatoire")
+    private String codePostal;
+
+    @NotBlank(message = "La ville est obligatoire")
+    private String ville;
 }

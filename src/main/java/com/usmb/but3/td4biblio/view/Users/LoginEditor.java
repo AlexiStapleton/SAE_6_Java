@@ -1,7 +1,6 @@
 package com.usmb.but3.td4biblio.view.Users;
 
 import com.usmb.but3.td4biblio.entity.Utilisateur;
-import com.usmb.but3.td4biblio.service.AuthService;
 import com.usmb.but3.td4biblio.service.SessionService;
 import com.vaadin.flow.component.KeyNotifier;
 import com.vaadin.flow.component.UI;
@@ -13,7 +12,6 @@ import com.vaadin.flow.component.orderedlayout.FlexComponent;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.EmailField;
 import com.vaadin.flow.component.textfield.PasswordField;
-import com.vaadin.flow.server.VaadinSession;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import com.vaadin.flow.spring.annotation.UIScope;
 
@@ -23,15 +21,13 @@ import java.util.Optional;
 @UIScope
 public class LoginEditor extends VerticalLayout implements KeyNotifier {
 
-    private final AuthService authService;
     private final SessionService sessionService;
 
     private final EmailField email = new EmailField("Email");
     private final PasswordField password = new PasswordField("Mot de passe");
     private final Button loginBtn = new Button("Se connecter");
 
-    public LoginEditor(AuthService authService, SessionService sessionService) {
-        this.authService = authService;
+    public LoginEditor(SessionService sessionService) {
         this.sessionService = sessionService;
 
         loginBtn.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
@@ -45,7 +41,7 @@ public class LoginEditor extends VerticalLayout implements KeyNotifier {
     }
 
     private void login() {
-        Optional<Utilisateur> userOpt = authService.authenticate(email.getValue(), password.getValue());
+        Optional<Utilisateur> userOpt = sessionService.authenticate(email.getValue(), password.getValue());
 
         if (userOpt.isPresent()) {
             sessionService.login(userOpt.get());

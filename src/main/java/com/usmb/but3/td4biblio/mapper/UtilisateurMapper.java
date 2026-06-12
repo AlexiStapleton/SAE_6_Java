@@ -1,7 +1,7 @@
 package com.usmb.but3.td4biblio.mapper;
 
 import com.usmb.but3.td4biblio.dto.UtilisateurDetailResponseDto;
-import com.usmb.but3.td4biblio.dto.RegisterRequest;
+import com.usmb.but3.td4biblio.DTO.RegisterRequest;
 import com.usmb.but3.td4biblio.dto.UtilisateurResponseDto;
 import com.usmb.but3.td4biblio.entity.Utilisateur;
 import org.mapstruct.*;
