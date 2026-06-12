@@ -5,7 +5,7 @@ import java.util.List;
 public interface GenericService <T, ID, RespDto, DetailDto, CreateDto> {
     List<RespDto> getAll();
     DetailDto getById(ID id);
-    RespDto create(CreateDto dto);
-    RespDto update(ID id, CreateDto dto);
+    DetailDto create(CreateDto dto);
+    DetailDto update(ID id, CreateDto dto);
     void delete(ID id);
 }

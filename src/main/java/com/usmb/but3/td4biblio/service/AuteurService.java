@@ -27,53 +27,28 @@ public class AuteurService
 
     private final AuteurRepo auteurRepo;  // ← version typée en plus
     private final TypeAuteurRepo typeAuteurRepo;
+    private final AuteurMapper mapper;
 
     public AuteurService(AuteurRepo repository, AuteurMapper mapper, TypeAuteurRepo typeAuteurRepo) {
         super(repository, mapper);
         this.auteurRepo = repository;  // ← même instance, juste typée correctement
         this.typeAuteurRepo = typeAuteurRepo;
+        this.mapper = mapper;
     }
 
-//    public List<AuteurResponseDto> getAllAuteurs() {
-//
-//        return repository.findAll(Sort.by(Sort.Direction.ASC, "id"))
-//                .stream()
-//                .map(mapper::toResponse)
-//                .toList();
-//    }
-//
-//    public AuteurResponseDto getAuteurById(Integer id) {
-//        Auteur auteur = auteurRepo.findById(id).orElseThrow(
-//                () -> new RessourceNotFoundException("Auteur non trouvé avec l'id : " + id)
-//        );
-//        return auteurMapper.toResponse(auteur);
-//    }
-
-//    public AuteurResponseDto saveAuteur(AuteurCreateDto dto) {
-//        Auteur auteur = auteurMapper.toEntity(dto);
-//
-//        List<TypeAuteur> types = dto.getTypesAuteurIds().stream()
-//                .map(id -> typeAuteurRepo.findById(id).orElseThrow())
-//                .toList();
-//        auteur.setTypesAuteur(types);
-//
-//        return auteurMapper.toResponse(auteurRepo.save(auteur));
-//    }
-
     @Override
-    public AuteurResponseDto update(Integer id,  AuteurCreateDto dto) {
+    public AuteurDetailResponseDto update(Integer id,  AuteurCreateDto dto) {
 
         Auteur auteur = repository.findById(id)
                 .orElseThrow(() -> new RessourceNotFoundException("Entité non trouvée : " + id));
 
+        mapper.updateFromDto(dto, auteur);
 
-        return mapper.toResponse(auteur);
+        List<TypeAuteur> types = typeAuteurRepo.findAllById(dto.getTypesAuteurIds());
+        auteur.setTypesAuteur(types);
+
+        return mapper.toDetailResponse(repository.save(auteur));
     }
-
-//    public ResponseEntity<Void> deleteAuteurById(Integer id) {
-//        auteurRepo.deleteById(id);
-//        return ResponseEntity.noContent().build();
-//    }
 
     public List<AuteurResponseDto> getAuteursByNom(String nom) {
 

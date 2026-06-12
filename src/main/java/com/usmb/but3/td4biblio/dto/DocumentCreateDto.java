@@ -10,11 +10,11 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @AllArgsConstructor
 public class DocumentCreateDto {
-    private AuteurResponseDto auteur;
-    private EditeurResponseDto editeur;
-    private BibliothequeResponseDto bibliotheque;
-    private GenreDocumentResponseDto genre;
-    private CodeRaisonResponseDto codeRaison;
+    private Integer auteurId;
+    private Integer editeurId;
+    private Integer bibliothequeId;
+    private Integer genreId;
+    private Integer codeRaisonId;
     private String titre;
     private String gif;
     private String format;

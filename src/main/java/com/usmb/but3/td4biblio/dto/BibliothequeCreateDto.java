@@ -8,5 +8,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Data
 public class BibliothequeCreateDto {
-    public String nom;
+    private String nom;
+    private Integer adresseId;
 }
