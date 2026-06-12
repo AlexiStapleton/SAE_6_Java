@@ -128,25 +128,13 @@ public class DocumentEditor extends VerticalLayout implements KeyNotifier {
         setVisible(false);
     }
 
-    void save() {
-
-        if(document.getId() == null) {
-            documentService.saveDocument(document);
-        }
-        else {
-            documentService.updateDocument(document);
+        void save() {
+                changeHandler.onChange();
         }
 
-        changeHandler.onChange();
-    }
-
-    void delete() {
-
-        documentService.deleteDocument(
-                document.getId());
-
-        changeHandler.onChange();
-    }
+        void delete() {
+                changeHandler.onChange();
+        }
 
     public interface ChangeHandler {
         void onChange();
@@ -164,7 +152,7 @@ public class DocumentEditor extends VerticalLayout implements KeyNotifier {
 
         if(persisted) {
             document =
-                    documentService.getDocumentById(
+                    documentService.getById(
                             d.getId());
         }
         else {

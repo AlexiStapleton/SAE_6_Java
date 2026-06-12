@@ -1,6 +1,8 @@
 package com.usmb.but3.td4biblio.view;
 
-import com.usmb.but3.td4biblio.entity.Document;
+import com.usmb.but3.td4biblio.dto.DocumentCreateDto;
+import com.usmb.but3.td4biblio.dto.DocumentDetailResponseDto;
+import com.usmb.but3.td4biblio.dto.DocumentResponseDto;
 import com.usmb.but3.td4biblio.service.DocumentService;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.grid.Grid;
@@ -9,6 +11,8 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.Route;
+import com.usmb.but3.td4biblio.entity.Document;
+
 
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
@@ -33,8 +37,8 @@ public class DocumentView extends VerticalLayout {
 
     private final DocumentEditor editor;
 
-    final Grid<Document> grid =
-            new Grid<>(Document.class);
+        final Grid<DocumentResponseDto> grid =
+                new Grid<>(DocumentResponseDto.class);
 
     final TextField filter =
             new TextField();
@@ -68,7 +72,8 @@ public class DocumentView extends VerticalLayout {
         grid.setColumns(
                 "id",
                 "titre",
-                "format",
+                "nomAuteur",
+                "nomEditeur",
                 "datePublication",
                 "empruntable"
         );
@@ -77,10 +82,19 @@ public class DocumentView extends VerticalLayout {
                 .setWidth("80px")
                 .setFlexGrow(0);
 
-        grid.asSingleSelect()
-                .addValueChangeListener(
-                        e -> editor.editDocument(
-                                e.getValue()));
+
+        // grid.asSingleSelect()
+        // .addValueChangeListener(e -> {
+
+        //     if(e.getValue() != null) {
+
+        //         editor.editDocument(
+        //                 documentService.getById(
+        //                         e.getValue().getId()
+        //                 )
+        //         );
+        //     }
+        // });
 
         editor.setChangeHandler(() -> {
 
@@ -94,23 +108,26 @@ public class DocumentView extends VerticalLayout {
                         filter,
                         addNewBtn);
 
-        add(actions, grid, editor);
+        add(actions, grid);
 
         listDocuments(null);
     }
 
     void listDocuments(String filterText) {
 
-        if(!StringUtils.hasText(filterText)) {
+        if (!StringUtils.hasText(filterText)) {
 
-            grid.setItems(
-                    documentService.getAllDocuments());
+                grid.setItems(
+                        documentService.getAll()
+                );
         }
         else {
 
-            grid.setItems(
-                    documentService.searchByTitre(
-                            filterText));
+                grid.setItems(
+                        documentService.searchByTitre(
+                                filterText
+                        )
+                );
         }
-    }
+   }
 }

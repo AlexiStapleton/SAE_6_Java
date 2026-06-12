@@ -1,83 +1,79 @@
 package com.usmb.but3.td4biblio.service;
 
+import com.usmb.but3.td4biblio.dto.DocumentCreateDto;
+import com.usmb.but3.td4biblio.dto.DocumentDetailResponseDto;
+import com.usmb.but3.td4biblio.dto.DocumentResponseDto;
 import com.usmb.but3.td4biblio.entity.Document;
+import com.usmb.but3.td4biblio.exception.RessourceNotFoundException;
+import com.usmb.but3.td4biblio.mapper.DocumentMapper;
 import com.usmb.but3.td4biblio.repository.DocumentRepo;
 
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import jakarta.transaction.Transactional;
 
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 
 @Service
-@RequiredArgsConstructor
-@Slf4j
-public class DocumentService {
+@Transactional
+public class DocumentService
+        extends AbstractGenericService<
+        Document,
+        Integer,
+        DocumentResponseDto,
+        DocumentDetailResponseDto,
+        DocumentCreateDto> {
 
     private final DocumentRepo documentRepo;
 
-    public List<Document> getAllDocuments() {
-        return documentRepo.findAll(
-                Sort.by(Sort.Direction.ASC, "id"));
+    public DocumentService(
+            DocumentRepo repository,
+            DocumentMapper mapper) {
+
+        super(repository, mapper);
+        this.documentRepo = repository;
     }
 
-    public Document getDocumentById(Integer id) {
+    @Override
+    public DocumentResponseDto update(
+            Integer id,
+            DocumentCreateDto dto) {
 
-        Optional<Document> optionalDocument =
-                documentRepo.findById(id);
+        Document document = documentRepo.findById(id)
+                .orElseThrow(() ->
+                        new RessourceNotFoundException(
+                                "Document non trouvé : " + id));
 
-        if(optionalDocument.isPresent()) {
-            return optionalDocument.get();
-        }
+        document.setTitre(dto.getTitre());
+        document.setGif(dto.getGif());
+        document.setFormat(dto.getFormat());
+        document.setDescription(dto.getDescription());
+        document.setDateAcquisition(dto.getDateAcquisition());
+        document.setDatePublication(dto.getDatePublication());
+        document.setCodeEmplacement(dto.getCodeEmplacement());
+        document.setEmpruntable(dto.getEmpruntable());
 
-        log.error("Document {} introuvable", id);
-        return null;
+        return mapper.toResponse(
+                documentRepo.save(document));
     }
 
-    public Document saveDocument(Document document) {
+    public List<DocumentResponseDto> searchByTitre(
+            String titre) {
 
-        document.setCreatedAt(LocalDateTime.now());
-        document.setUpdatedAt(LocalDateTime.now());
-
-        return documentRepo.save(document);
+        return documentRepo
+                .findByTitreContainingIgnoreCase(titre)
+                .stream()
+                .map(mapper::toResponse)
+                .toList();
     }
 
-    public Document updateDocument(Document document) {
+    public List<DocumentResponseDto> searchByTitreStartsWith(
+            String titre) {
 
-        Optional<Document> existing =
-                documentRepo.findById(document.getId());
-
-        if(existing.isEmpty()) {
-            return null;
-        }
-
-        document.setCreatedAt(
-                existing.get().getCreatedAt());
-
-        document.setUpdatedAt(
-                LocalDateTime.now());
-
-        return documentRepo.save(document);
-    }
-
-    public void deleteDocument(Integer id) {
-
-        documentRepo.deleteById(id);
-
-        log.info("Document {} supprimé", id);
-    }
-
-    public List<Document> getByAuteurId(Integer auteurId) {
-        return documentRepo.findByAuteurId(
-                auteurId,
-                Sort.by("id"));
-    }
-
-    public List<Document> searchByTitre(String titre) {
-        return documentRepo.findByTitreContainingIgnoreCase(titre);
+        return documentRepo
+                .findByTitreStartsWithIgnoreCase(titre)
+                .stream()
+                .map(mapper::toResponse)
+                .toList();
     }
 }
