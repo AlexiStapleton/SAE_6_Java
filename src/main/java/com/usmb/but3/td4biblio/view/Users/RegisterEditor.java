@@ -26,6 +26,7 @@ import com.vaadin.flow.data.validator.EmailValidator;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import com.vaadin.flow.spring.annotation.UIScope;
 
+
 @SpringComponent
 @UIScope
 public class RegisterEditor extends VerticalLayout implements KeyNotifier {
