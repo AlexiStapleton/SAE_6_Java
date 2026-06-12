@@ -35,33 +35,6 @@ public class LivreService
      this.livreRepo = repository;
  }
 
-// public List<LivreResponseDto> getAllLivres(){
-//     //return livreRepo.findAll();
-//    // To specify a sort order, use:
-//      return livreRepo.findAll(Sort.by(Sort.Direction.ASC, "id"))
-//              .stream()
-//              .map(mapper::toResponse)
-//              .toList();
-//
-// }
-//
-// public LivreDetailResponseDto getLivreById(Integer id) {
-//    Livre livre = livreRepo.findById(id)
-//            .orElseThrow(() -> new RessourceNotFoundException("Le livre introuvable avec l'id : " + id));
-//
-//    return mapper.toDetailResponse(livre);
-// }
-
-// public LivreResponseDto saveLivre (LivreCreateDto dto) {
-//     Livre livre = mapper.toEntity(dto);
-//     livre.setCreatedAt(LocalDateTime.now());
-//     livre.setUpdatedAt(LocalDateTime.now());
-//
-//     Livre savedLivre = livreRepo.save(livre);
-//     log.info("Livre with id: {} saved successfully", livre.getId());
-//     return mapper.toResponse(savedLivre);
-// }
-
  public LivreDetailResponseDto update (LivreDetailResponseDto dto) {
      Livre livre = livreRepo.findById(dto.getId())
              .orElseThrow(() -> new RessourceNotFoundException("Livre introuvable : " + dto.getId()));
