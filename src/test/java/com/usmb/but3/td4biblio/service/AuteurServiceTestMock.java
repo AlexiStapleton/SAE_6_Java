@@ -258,6 +258,17 @@ class AuteurServiceTestMock {
         assertThat(result).hasSize(1);
     }
 
+    @Test
+    @DisplayName("getAuteursByNomAndPrenom - retourne les auteurs avec le nom et prénom exacts")
+    void getAuteursByNomLikeAndPrenomLike_retourneAuteurs() {
+        when(auteurRepo.findByNomLikeAndPrenomLike("Hu", "Vict")).thenReturn(List.of(auteur));
+        when(mapper.toResponse(auteur)).thenReturn(responseDto);
+
+        List<AuteurResponseDto> result = auteurService.getAuteursByNomLikeAndPrenomLike("Hu", "Vict");
+
+        assertThat(result).hasSize(1);
+    }
+
     // ─── getByNomContainingIgnoreCase ─────────────────────────────────────────
 
     @Test
