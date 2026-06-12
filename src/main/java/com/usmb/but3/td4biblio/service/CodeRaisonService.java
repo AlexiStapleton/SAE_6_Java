@@ -23,6 +23,8 @@ public class CodeRaisonService
         CodeRaison codeRaison = repository.findById(id)
                 .orElseThrow(() -> new RessourceNotFoundException("Pas de code Raison avec l'id" + id));
 
-        return mapper.toResponse(codeRaison);
+        mapper.updateFromDto(dto, codeRaison);
+
+        return mapper.toDetailResponse(repository.save(codeRaison));
     }
 }

@@ -4,10 +4,13 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 public class EmpruntCreateDto {
-    public Integer documentId;
-    public Integer utilisateurId;
+    private Integer documentId;
+    private Integer utilisateurId;
+    private LocalDate prolongation;
 }
