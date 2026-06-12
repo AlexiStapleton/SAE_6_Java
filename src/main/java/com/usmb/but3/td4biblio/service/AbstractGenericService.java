@@ -32,8 +32,8 @@ public abstract class AbstractGenericService<T, ID, RespDto, DetailDto, CreateDt
     }
 
     @Override
-    public RespDto create(CreateDto dto) {
-        return mapper.toResponse(repository.save(mapper.toEntity(dto)));
+    public DetailDto create(CreateDto dto) {
+        return mapper.toDetailResponse(repository.save(mapper.toEntity(dto)));
     }
 
     @Override
@@ -44,7 +44,7 @@ public abstract class AbstractGenericService<T, ID, RespDto, DetailDto, CreateDt
         repository.deleteById(id);
     }
 
-    public abstract RespDto update(ID id, CreateDto dto);
+    public abstract DetailDto update(ID id, CreateDto dto);
 
 
 }

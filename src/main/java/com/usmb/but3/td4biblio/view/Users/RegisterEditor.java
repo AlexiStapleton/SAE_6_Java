@@ -1,6 +1,6 @@
 package com.usmb.but3.td4biblio.view.Users;
 
-import com.usmb.but3.td4biblio.DTO.RegisterRequest;
+import com.usmb.but3.td4biblio.dto.RegisterRequest;
 import com.usmb.but3.td4biblio.entity.Utilisateur;
 import com.usmb.but3.td4biblio.entity.RoleUtilisateur;
 import com.usmb.but3.td4biblio.service.AuthService;
@@ -25,6 +25,7 @@ import com.vaadin.flow.data.binder.ValidationException;
 import com.vaadin.flow.data.validator.EmailValidator;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import com.vaadin.flow.spring.annotation.UIScope;
+
 
 @SpringComponent
 @UIScope

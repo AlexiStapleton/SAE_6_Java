@@ -22,7 +22,9 @@ public class GenreDocumentService
         GenreDocument genreDocument = repository.findById(id)
                 .orElseThrow(() -> new RessourceNotFoundException("Genre non trouvé avec id : " + id));
 
-        return mapper.toResponse(genreDocument);
+        genreDocument.setNom(dto.getNom());
+
+        return mapper.toResponse(repository.save(genreDocument));
     }
 
 }
