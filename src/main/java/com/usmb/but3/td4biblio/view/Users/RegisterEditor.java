@@ -1,8 +1,7 @@
 package com.usmb.but3.td4biblio.view.Users;
 
-import com.usmb.but3.td4biblio.DTO.RegisterRequest;
+import com.usmb.but3.td4biblio.dto.RegisterRequest;
 import com.usmb.but3.td4biblio.entity.RoleUtilisateur;
-import com.usmb.but3.td4biblio.service.SessionService;
 import com.usmb.but3.td4biblio.service.UtilisateurService;
 import com.vaadin.flow.component.KeyNotifier;
 import com.vaadin.flow.component.button.Button;
@@ -29,7 +28,6 @@ import com.vaadin.flow.spring.annotation.UIScope;
 public class RegisterEditor extends VerticalLayout implements KeyNotifier {
 
     private final UtilisateurService utilisateurService;
-    private final SessionService sessionService;
 
     private final TextField nom = new TextField("Nom");
     private final TextField prenom = new TextField("Prénom");
@@ -48,9 +46,8 @@ public class RegisterEditor extends VerticalLayout implements KeyNotifier {
 
     private final Binder<RegisterRequest> binder = new Binder<>(RegisterRequest.class);
 
-    public RegisterEditor(UtilisateurService utilisateurService, SessionService sessionService) {
+    public RegisterEditor(UtilisateurService utilisateurService) {
         this.utilisateurService = utilisateurService;
-        this.sessionService = sessionService;
 
         roleUtilisateur.setItems(RoleUtilisateur.values());
         roleUtilisateur.setItemLabelGenerator(Enum::name);
