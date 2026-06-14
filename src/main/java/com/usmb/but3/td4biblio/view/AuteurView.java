@@ -1,6 +1,7 @@
 package com.usmb.but3.td4biblio.view;
 
 import com.usmb.but3.td4biblio.dto.AuteurCreateDto;
+import com.usmb.but3.td4biblio.dto.AuteurDetailResponseDto;
 import com.usmb.but3.td4biblio.dto.AuteurResponseDto;
 import com.usmb.but3.td4biblio.entity.Auteur;
 import com.usmb.but3.td4biblio.service.AuteurService;
@@ -70,11 +71,11 @@ public class AuteurView extends VerticalLayout {
 
 		// Connect selected Customer to editor or hide if none is selected
 		grid.asSingleSelect().addValueChangeListener(e -> {
-			editor.editAuteur(e.getValue());
+			editor.editAuteur(auteurService.getById(e.getValue().getId()));
 		});
 
 		// Instantiate and edit new Customer the new button is clicked
-		addNewBtn.addClickListener(e -> editor.editAuteur(new AuteurResponseDto()));
+		addNewBtn.addClickListener(e -> editor.editAuteur(new AuteurDetailResponseDto()));
 
 		// Listen changes made by the editor, refresh data from backend
 		editor.setChangeHandler(() -> {

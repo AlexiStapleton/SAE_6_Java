@@ -51,7 +51,7 @@ public class DocumentService
     // -------------------------------------------------------------------------
 
     @Override
-    public DocumentResponseDto update(Integer id, DocumentCreateDto dto) {
+    public DocumentDetailResponseDto update(Integer id, DocumentCreateDto dto) {
         Document document = documentRepo.findById(id)
                 .orElseThrow(() -> new RessourceNotFoundException("Document non trouvé : " + id));
 
@@ -64,6 +64,8 @@ public class DocumentService
         document.setCodeEmplacement(dto.getCodeEmplacement());
         document.setEmpruntable(dto.getEmpruntable());
 
-        return mapper.toResponse(documentRepo.save(document));
+       return mapper.toDetailResponse(
+        documentRepo.save(document)
+        );
     }
 }

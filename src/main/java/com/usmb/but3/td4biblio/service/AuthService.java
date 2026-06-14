@@ -19,23 +19,7 @@ public class AuthService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
-    public Utilisateur register(RegisterRequest request) {
-        if (userRepository.existsByEmail(request.getEmail())) {
-            throw new ResponseStatusException(HttpStatus.CONFLICT, "Email déjà utilisé");
-        }
 
-        Utilisateur user = new Utilisateur();
-        user.setNom(request.getNom());
-        user.setPrenom(request.getPrenom());
-        user.setEmail(request.getEmail());
-        user.setDateNaissance(request.getDateNaissance());
-        user.setDateFinAbonnement(LocalDate.now().plusYears(1));
-        user.setNumeroCarte(request.getNumeroCarte());
-        user.setHashMotDePasse(passwordEncoder.encode(request.getPassword()));
-        user.setRoleUtilisateur(request.getRoleUtilisateur());
-
-        return userRepository.save(user);
-    }
     public Optional<Utilisateur> authenticate(String email, String password) {
         return userRepository.findByEmail(email)
                 .filter(user -> passwordEncoder.matches(password, user.getHashMotDePasse()));
