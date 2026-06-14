@@ -1,4 +1,4 @@
-package com.usmb.but3.td4biblio.service;
+package com.usmb.but3.td4biblio.service.mock;
 
 import com.usmb.but3.td4biblio.dto.GenreDocumentCreateDto;
 import com.usmb.but3.td4biblio.dto.GenreDocumentResponseDto;
@@ -6,6 +6,7 @@ import com.usmb.but3.td4biblio.entity.GenreDocument;
 import com.usmb.but3.td4biblio.exception.RessourceNotFoundException;
 import com.usmb.but3.td4biblio.mapper.GenreDocumentMapper;
 import com.usmb.but3.td4biblio.repository.GenreDocumentRepo;
+import com.usmb.but3.td4biblio.service.GenreDocumentService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

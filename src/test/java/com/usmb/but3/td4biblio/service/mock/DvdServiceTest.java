@@ -1,4 +1,4 @@
-package com.usmb.but3.td4biblio.service;
+package com.usmb.but3.td4biblio.service.mock;
 
 import com.usmb.but3.td4biblio.dto.DvdCreateDto;
 import com.usmb.but3.td4biblio.dto.DvdDetailResponseDto;
@@ -7,6 +7,7 @@ import com.usmb.but3.td4biblio.entity.*;
 import com.usmb.but3.td4biblio.exception.RessourceNotFoundException;
 import com.usmb.but3.td4biblio.mapper.DvdMapper;
 import com.usmb.but3.td4biblio.repository.*;
+import com.usmb.but3.td4biblio.service.DvdService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

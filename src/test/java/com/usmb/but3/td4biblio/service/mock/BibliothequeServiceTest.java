@@ -1,4 +1,4 @@
-package com.usmb.but3.td4biblio.service;
+package com.usmb.but3.td4biblio.service.mock;
 
 import com.usmb.but3.td4biblio.dto.BibliothequeCreateDto;
 import com.usmb.but3.td4biblio.dto.BibliothequeDetailResponseDto;
@@ -9,6 +9,7 @@ import com.usmb.but3.td4biblio.exception.RessourceNotFoundException;
 import com.usmb.but3.td4biblio.mapper.BibliothequeMapper;
 import com.usmb.but3.td4biblio.repository.AdresseRepo;
 import com.usmb.but3.td4biblio.repository.BibliothequeRepo;
+import com.usmb.but3.td4biblio.service.BibliothequeService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

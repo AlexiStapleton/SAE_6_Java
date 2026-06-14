@@ -1,4 +1,4 @@
-package com.usmb.but3.td4biblio.service;
+package com.usmb.but3.td4biblio.service.mock;
 
 import com.usmb.but3.td4biblio.dto.EmpruntCreateDto;
 import com.usmb.but3.td4biblio.dto.EmpruntDetailResponseDto;
@@ -11,6 +11,7 @@ import com.usmb.but3.td4biblio.mapper.EmpruntMapper;
 import com.usmb.but3.td4biblio.mapper.UtilisateurRepo;
 import com.usmb.but3.td4biblio.repository.DocumentRepo;
 import com.usmb.but3.td4biblio.repository.EmpruntRepo;
+import com.usmb.but3.td4biblio.service.EmpruntService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

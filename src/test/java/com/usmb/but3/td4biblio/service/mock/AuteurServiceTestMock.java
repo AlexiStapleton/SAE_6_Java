@@ -1,4 +1,4 @@
-package com.usmb.but3.td4biblio.service;
+package com.usmb.but3.td4biblio.service.mock;
 
 import com.usmb.but3.td4biblio.dto.AuteurCreateDto;
 import com.usmb.but3.td4biblio.dto.AuteurDetailResponseDto;
@@ -9,11 +9,11 @@ import com.usmb.but3.td4biblio.exception.RessourceNotFoundException;
 import com.usmb.but3.td4biblio.mapper.AuteurMapper;
 import com.usmb.but3.td4biblio.repository.AuteurRepo;
 import com.usmb.but3.td4biblio.repository.TypeAuteurRepo;
+import com.usmb.but3.td4biblio.service.AuteurService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
