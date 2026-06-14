@@ -46,6 +46,20 @@ public class DocumentService
                 .toList();
     }
 
+    public List<DocumentResponseDto> searchByTitreEquals(String titre) {
+        return documentRepo.findByTitreIgnoreCase(titre)
+                .stream()
+                .map(mapper::toResponse)
+                .toList();
+    }
+
+    public List<DocumentResponseDto> searchByTitreStartsWith(String titre) {
+        return documentRepo.findByTitreStartsWithIgnoreCase(titre)
+                .stream()
+                .map(mapper::toResponse)
+                .toList();
+    }
+
     // -------------------------------------------------------------------------
     // update() obligatoire (méthode abstraite) — non exposé en vue pour l'instant
     // -------------------------------------------------------------------------

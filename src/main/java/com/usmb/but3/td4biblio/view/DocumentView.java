@@ -17,12 +17,11 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
+import com.usmb.but3.td4biblio.enumeration.TypeRecherche;
+import com.vaadin.flow.component.combobox.ComboBox;
+
 /**
- * Vue principale Documents — même architecture qu'AuteurView.
- *
- * - La grille affiche des DocumentResponseDto
- * - Le filtre délègue au service (searchByTitre / getAll)
- * - Le clic sur une ligne ouvre le DocumentEditor avec le DTO sélectionné
+ * Vue principale Documents 
  */
 @Component
 @Scope("prototype")
@@ -36,6 +35,7 @@ public class DocumentView extends VerticalLayout {
 
     final Grid<DocumentResponseDto> grid;
     final TextField filter;
+    final ComboBox<TypeRecherche> typeRecherche;
     private final Button addNewBtn;
 
     public DocumentView(DocumentService documentService, DocumentEditor editor) {
@@ -44,12 +44,18 @@ public class DocumentView extends VerticalLayout {
 
         this.grid      = new Grid<>(DocumentResponseDto.class);
         this.filter    = new TextField();
+        this.typeRecherche = new ComboBox<>("Type de recherche");
         this.addNewBtn = new Button("Nouveau document", VaadinIcon.PLUS.create());
 
         // ------------------------------------------------------------------
         // Layout
         // ------------------------------------------------------------------
-        HorizontalLayout actions = new HorizontalLayout(filter, addNewBtn);
+        HorizontalLayout actions =
+        new HorizontalLayout(
+                filter,
+                typeRecherche,
+                addNewBtn
+        );
         add(actions, grid, editor);
 
         // ------------------------------------------------------------------
@@ -68,10 +74,17 @@ public class DocumentView extends VerticalLayout {
         // ------------------------------------------------------------------
         // Filtre
         // ------------------------------------------------------------------
+        typeRecherche.setItems(TypeRecherche.values());
+        typeRecherche.setItemLabelGenerator(TypeRecherche::getLabel);
+        typeRecherche.setValue(TypeRecherche.CONTIENT);
+        
         filter.setPlaceholder("Rechercher par titre");
         filter.setClearButtonVisible(true);
         filter.setValueChangeMode(ValueChangeMode.LAZY);
         filter.addValueChangeListener(e -> listDocuments(e.getValue()));
+        typeRecherche.addValueChangeListener(
+                e -> listDocuments(filter.getValue())
+        );
 
         // ------------------------------------------------------------------
         // Sélection d'une ligne → ouvre l'éditeur
@@ -95,10 +108,33 @@ public class DocumentView extends VerticalLayout {
     // Délègue au service selon qu'un filtre est actif ou non
     // ------------------------------------------------------------------
     void listDocuments(String filterText) {
-        if (StringUtils.hasText(filterText)) {
-            grid.setItems(documentService.searchByTitre(filterText));
-        } else {
+
+        if (!StringUtils.hasText(filterText)) {
             grid.setItems(documentService.getAll());
+            return;
+        }
+
+        TypeRecherche type = typeRecherche.getValue();
+
+        if (type == null) {
+            type = TypeRecherche.CONTIENT;
+        }
+
+        switch (type) {
+            case CONTIENT ->
+                    grid.setItems(
+                            documentService.searchByTitre(filterText)
+                    );
+
+            case COMMENCE_PAR ->
+                    grid.setItems(
+                            documentService.searchByTitreStartsWith(filterText)
+                    );
+
+            case EGAL ->
+                    grid.setItems(
+                            documentService.searchByTitreEquals(filterText)
+                    );
         }
     }
 }

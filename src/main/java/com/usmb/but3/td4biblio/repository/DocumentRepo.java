@@ -12,6 +12,8 @@ public interface DocumentRepo extends JpaRepository<Document, Integer> {
 
     List<Document> findByTitreStartsWithIgnoreCase(String titre);
 
+    List<Document> findByTitreIgnoreCase(String titre);
+
     List<Document> findByAuteurId(Integer auteurId);
 
     List<Document> findByAuteurId(Integer auteurId, Sort sort);
