@@ -2,6 +2,7 @@ package com.usmb.but3.td4biblio.view;
 
 import com.usmb.but3.td4biblio.DTO.EditeurResponseDto;
 import com.usmb.but3.td4biblio.service.EditeurService;
+import com.usmb.but3.td4biblio.service.SessionService;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
@@ -34,7 +35,7 @@ public class EditeurView extends VerticalLayout {
     final TextField filter;
     private final Button addNewBtn;
 
-    public EditeurView(EditeurService editeurService, EditeurEditor editor) {
+    public EditeurView(EditeurService editeurService, EditeurEditor editor, SessionService sessionService) {
         this.editeurService = editeurService;
 
         this.grid = new Grid<>(EditeurResponseDto.class, false);
@@ -57,6 +58,11 @@ public class EditeurView extends VerticalLayout {
         filter.setWidth("300px");
 
         addNewBtn.addThemeVariants(ButtonVariant.LUMO_PRIMARY, ButtonVariant.LUMO_SUCCESS);
+
+        boolean isBibliothecaire = sessionService.getCurrentUser()
+                .map(u -> u.getRoleUtilisateur() == com.usmb.but3.td4biblio.entity.Utilisateur.RoleUtilisateur.BIBLIOTHECAIRE)
+                .orElse(false);
+        addNewBtn.setVisible(isBibliothecaire);
 
         HorizontalLayout actions = new HorizontalLayout(filter, addNewBtn);
         actions.setAlignItems(FlexComponent.Alignment.END);

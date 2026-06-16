@@ -30,7 +30,10 @@ public class EditeurService
 
     @Override
     public EditeurResponseDto create(EditeurCreateDto dto) {
-        Editeur editeur = mapper.toEntity(dto);
+        Editeur editeur = new Editeur();
+        editeur.setNom(dto.getNom());
+        editeur.setLienSiteWeb(dto.getLienSiteWeb());
+        editeur.setLienWikipedia(dto.getLienWikipedia());
         editeur.setAdresse(resolveAdresse(dto, null));
         return mapper.toResponse(editeurRepo.save(editeur));
     }
@@ -55,20 +58,23 @@ public class EditeurService
                 .toList();
     }
 
+    /**
+     * Met à jour ou crée une adresse à partir des champs du DTO.
+     * Si aucun champ adresse n'est renseigné, on conserve l'adresse existante.
+     */
     private Adresse resolveAdresse(EditeurCreateDto dto, Adresse existing) {
-        Adresse nouvelle = adresseRepo.findById(dto.getAdresseId()).orElseThrow(() -> new RessourceNotFoundException("Genre non trouvé avec id : " + dto.getAdresseId()));
-        boolean hasAdresseData = StringUtils.hasText(nouvelle.getRue())
-                || StringUtils.hasText(nouvelle.getCodePostal())
-                || StringUtils.hasText(nouvelle.getVille());
+        boolean hasAdresseData = StringUtils.hasText(dto.getRue())
+                || StringUtils.hasText(dto.getCodePostal())
+                || StringUtils.hasText(dto.getVille());
 
         if (!hasAdresseData) {
             return existing;
         }
 
         Adresse adresse = existing != null ? existing : new Adresse();
-        adresse.setRue(nouvelle.getRue());
-        adresse.setCodePostal(nouvelle.getCodePostal());
-        adresse.setVille(nouvelle.getVille());
+        adresse.setRue(dto.getRue());
+        adresse.setCodePostal(dto.getCodePostal());
+        adresse.setVille(dto.getVille());
         return adresseRepo.save(adresse);
     }
 }
