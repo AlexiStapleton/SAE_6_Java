@@ -35,3 +35,18 @@ out/
 
 ### VS Code ###
 .vscode/
+
+
+
+### Visual Studio ###
+.vs/
+
+.env
+
+*.log
+
+src/main/frontend/generated/
+logs/
+*.log
+src/main/frontend/types/index.d.ts
+node_modules/*

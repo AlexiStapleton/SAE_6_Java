@@ -1,36 +1,85 @@
 package com.usmb.but3.td4biblio.view;
 
+import com.usmb.but3.td4biblio.entity.RoleUtilisateur;
+import com.usmb.but3.td4biblio.service.SessionService;
+import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.applayout.AppLayout;
+import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.orderedlayout.Scroller;
+import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.sidenav.SideNav;
 import com.vaadin.flow.component.sidenav.SideNavItem;
+import com.vaadin.flow.router.AfterNavigationEvent;
 import com.vaadin.flow.router.Layout;
 import com.vaadin.flow.server.menu.MenuConfiguration;
 import com.vaadin.flow.server.menu.MenuEntry;
+
+import java.util.Set;
 
 import static com.vaadin.flow.theme.lumo.LumoUtility.*;
 
 @Layout
 public final class MainLayout extends AppLayout {
 
-    MainLayout() {
+    private static final Set<String> NO_MENU_ROUTES = Set.of("login");
+
+    private final SessionService sessionService;
+    private final VerticalLayout drawerContent;
+    private final Span userLabel = new Span();
+    private final Scroller scroller = new Scroller();
+
+    public MainLayout(SessionService sessionService) {
+        this.sessionService = sessionService;
+
         setPrimarySection(Section.DRAWER);
-        addToDrawer(createHeader(), new Scroller(createSideNav()));
+
+        drawerContent = new VerticalLayout();
+        drawerContent.setSizeFull();
+        drawerContent.setPadding(false);
+        drawerContent.setSpacing(false);
+
+        drawerContent.add(createHeader());
+
+
+
+        scroller.setSizeFull();
+        drawerContent.add(scroller);
+        drawerContent.expand(scroller);
+
+        drawerContent.add(createLogoutButton());
+
+        addToDrawer(drawerContent);
+
+        UI.getCurrent().addAfterNavigationListener(this::onAfterNavigation);
+    }
+
+    private void onAfterNavigation(AfterNavigationEvent event) {
+        String path = event.getLocation().getFirstSegment();
+        boolean hideMenu = NO_MENU_ROUTES.contains(path);
+        setDrawerOpened(!hideMenu);
+        getElement().getThemeList().set("hide-drawer", hideMenu);
+
+        userLabel.setText(
+                sessionService.getCurrentUser()
+                        .map(u -> u.getPrenom() + " " + u.getNom())
+                        .orElse("BiBlio Vaadin")
+        );
+
+        scroller.setContent(createSideNav());
     }
 
     private Div createHeader() {
-        // TODO Replace with real application logo and name
         var appLogo = VaadinIcon.CUBES.create();
         appLogo.addClassNames(TextColor.PRIMARY, IconSize.LARGE);
 
-        var appName = new Span("Application : BiBlio Vaadin");
-        appName.addClassNames(FontWeight.SEMIBOLD, FontSize.LARGE);
+        userLabel.addClassNames(FontWeight.SEMIBOLD, FontSize.LARGE);
 
-        var header = new Div(appLogo, appName);
+        var header = new Div(appLogo, userLabel);
         header.addClassNames(Display.FLEX, Padding.MEDIUM, Gap.MEDIUM, AlignItems.CENTER);
         return header;
     }
@@ -38,7 +87,18 @@ public final class MainLayout extends AppLayout {
     private SideNav createSideNav() {
         var nav = new SideNav();
         nav.addClassNames(Margin.Horizontal.MEDIUM);
-        MenuConfiguration.getMenuEntries().forEach(entry -> nav.addItem(createSideNavItem(entry)));
+
+        boolean isBibliothecaire = sessionService.getCurrentUser()
+                .map(u -> u.getRoleUtilisateur() == RoleUtilisateur.BIBLIOTHECAIRE)
+                .orElse(false);
+
+        MenuConfiguration.getMenuEntries().forEach(entry -> {
+            if (entry.path().equals("/register") && !isBibliothecaire) {
+                return; // skip
+            }
+            nav.addItem(createSideNavItem(entry));
+        });
+
         return nav;
     }
 
@@ -50,25 +110,16 @@ public final class MainLayout extends AppLayout {
         }
     }
 
-    /* 
-    private Component createUserMenu() {
-        // TODO Replace with real user information and actions
-        var avatar = new Avatar("John Smith");
-        avatar.addThemeVariants(AvatarVariant.LUMO_XSMALL);
-        avatar.addClassNames(Margin.Right.SMALL);
-        avatar.setColorIndex(5);
+    private Div createLogoutButton() {
+        Button logoutBtn = new Button("Se déconnecter", VaadinIcon.SIGN_OUT.create());
+        logoutBtn.addThemeVariants(ButtonVariant.LUMO_TERTIARY, ButtonVariant.LUMO_ERROR);
+        logoutBtn.addClickListener(e -> {
+            sessionService.logout();
+            UI.getCurrent().getPage().setLocation("/login");
+        });
 
-        var userMenu = new MenuBar();
-        userMenu.addThemeVariants(MenuBarVariant.LUMO_TERTIARY_INLINE);
-        userMenu.addClassNames(Margin.MEDIUM);
-
-        var userMenuItem = userMenu.addItem(avatar);
-        userMenuItem.add("John Smith");
-        userMenuItem.getSubMenu().addItem("View Profile").setEnabled(false);
-        userMenuItem.getSubMenu().addItem("Manage Settings").setEnabled(false);
-        userMenuItem.getSubMenu().addItem("Logout").setEnabled(false);
-
-        return userMenu;
-    }*/
-
+        Div wrapper = new Div(logoutBtn);
+        wrapper.addClassNames(Padding.MEDIUM, Display.FLEX, JustifyContent.CENTER);
+        return wrapper;
+    }
 }
