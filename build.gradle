@@ -14,6 +14,10 @@ java {
 	}
 }
 
+vaadin {
+	productionMode = project.hasProperty('vaadin.productionMode')
+}
+
 configurations {
 	compileOnly {
 		extendsFrom annotationProcessor
