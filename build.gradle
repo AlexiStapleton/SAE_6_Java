@@ -74,6 +74,9 @@ dependencyManagement {  // MS added for Vaadin BOM
 		mavenBom "com.vaadin:vaadin-bom:${vaadinVersion}"
 	}
 }
+jar {
+	enabled = false // Désactive le JAR plain, garde uniquement le bootJar
+}
 
 tasks.named('test') {
 	useJUnitPlatform()
