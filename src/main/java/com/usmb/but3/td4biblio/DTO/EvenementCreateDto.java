@@ -14,6 +14,6 @@ public class EvenementCreateDto {
     private LocalDate dateDebut;
     private LocalDate dateFin;
 
-    private BibliothequeResponseDto bibliotheque;
-    private TypeEvenementResponseDto typeEvenement;
+    private Integer bibliothequeId;
+    private Integer typeEvenementId;
 }
