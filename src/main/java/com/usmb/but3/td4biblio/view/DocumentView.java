@@ -12,6 +12,8 @@ import com.vaadin.flow.data.value.ValueChangeMode;
 import com.vaadin.flow.router.Menu;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
+import com.vaadin.flow.component.confirmdialog.ConfirmDialog;
+import com.vaadin.flow.component.dialog.Dialog;
 
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -20,6 +22,7 @@ import org.springframework.util.StringUtils;
 import com.usmb.but3.td4biblio.enumeration.ChampRechercheDocument;
 import com.usmb.but3.td4biblio.enumeration.TypeRecherche;
 import com.vaadin.flow.component.combobox.ComboBox;
+import com.usmb.but3.td4biblio.view.DocumentForm;
 
 /**
  * Vue principale Documents 
@@ -40,9 +43,12 @@ public class DocumentView extends VerticalLayout {
     final ComboBox<ChampRechercheDocument> champRecherche;
     private final Button addNewBtn;
 
-    public DocumentView(DocumentService documentService, DocumentEditor editor) {
+    private final DocumentForm form;
+
+    public DocumentView(DocumentService documentService, DocumentEditor editor, DocumentForm form) {
         this.documentService = documentService;
         this.editor = editor;
+        this.form = form;
 
         this.grid      = new Grid<>(DocumentResponseDto.class);
         this.filter    = new TextField();
@@ -75,6 +81,37 @@ public class DocumentView extends VerticalLayout {
         grid.getColumnByKey("datePublication").setHeader("Publication");
         grid.getColumnByKey("empruntable").setHeader("Empruntable");
 
+        grid.addComponentColumn(document -> {
+
+                Button voir =
+                        new Button(VaadinIcon.EYE.create());
+
+                Button modifier =
+                        new Button(VaadinIcon.EDIT.create());
+
+                Button supprimer =
+                        new Button(VaadinIcon.TRASH.create());
+
+                voir.addClickListener(
+                        e -> editor.editDocument(document)
+                );
+
+                modifier.addClickListener(
+                        e -> openEditDialog(document)
+                );
+
+                supprimer.addClickListener(
+                        e -> openDeleteDialog(document)
+                );
+
+                return new HorizontalLayout(
+                        voir,
+                        modifier,
+                        supprimer
+                );
+
+        }).setHeader("Actions");
+
         // ------------------------------------------------------------------
         // Filtre
         // ------------------------------------------------------------------
@@ -99,7 +136,7 @@ public class DocumentView extends VerticalLayout {
         filter.setValueChangeMode(ValueChangeMode.LAZY);
         champRecherche.addValueChangeListener(
         e -> listDocuments(filter.getValue())
-);
+        );
         filter.addValueChangeListener(e -> listDocuments(e.getValue()));
         typeRecherche.addValueChangeListener(
                 e -> listDocuments(filter.getValue())
@@ -109,14 +146,21 @@ public class DocumentView extends VerticalLayout {
         // Sélection d'une ligne → ouvre l'éditeur
         // ------------------------------------------------------------------
         grid.asSingleSelect().addValueChangeListener(e -> editor.editDocument(e.getValue()));
+        
 
         // Bouton "Nouveau" — passe un DTO vide (comme AuteurView passe un AuteurResponseDto vide)
-        addNewBtn.addClickListener(e -> editor.editDocument(new DocumentResponseDto()));
+        addNewBtn.addClickListener(
+                e -> form.openCreateDialog()
+        );
 
         // Rafraîchit la liste après une action dans l'éditeur
         editor.setChangeHandler(() -> {
             editor.setVisible(false);
             listDocuments(filter.getValue());
+        });
+
+        form.setChangeHandler(() -> {
+                listDocuments(filter.getValue());
         });
 
         // Chargement initial
@@ -151,4 +195,40 @@ public class DocumentView extends VerticalLayout {
                         )
                 );
         }
+
+        private void openEditDialog(
+                DocumentResponseDto document
+        ) {
+                form.openEditDialog(document);
+        }
+
+        private void openDeleteDialog(
+                DocumentResponseDto document
+        ) {
+                ConfirmDialog dialog =
+                        new ConfirmDialog();
+
+                dialog.setHeader("Suppression");
+
+                dialog.setText(
+                        "Supprimer le document : "
+                                + document.getTitre()
+                                + " ?"
+                );
+
+                dialog.setCancelable(true);
+                dialog.setConfirmText("Supprimer");
+
+                dialog.addConfirmListener(e -> {
+
+                        documentService.delete(
+                                document.getId()
+                        );
+
+                        listDocuments(filter.getValue());
+                });
+
+                dialog.open();
+        }
+
 }
