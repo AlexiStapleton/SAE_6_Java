@@ -1,11 +1,12 @@
 package com.usmb.but3.td4biblio.mapper;
 
+import com.usmb.but3.td4biblio.dto.EditeurCreateDto;
 import com.usmb.but3.td4biblio.dto.EvenementCreateDto;
 import com.usmb.but3.td4biblio.dto.EvenementDetailResponseDto;
 import com.usmb.but3.td4biblio.dto.EvenementResponseDto;
+import com.usmb.but3.td4biblio.entity.Editeur;
 import com.usmb.but3.td4biblio.entity.Evenement;
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
+import org.mapstruct.*;
 
 @Mapper(componentModel = "spring", uses = {BibliothequeMapper.class, TypeEvenementMapper.class})
 public interface EvenementMapper extends GenericMapper<Evenement, EvenementResponseDto, EvenementDetailResponseDto, EvenementCreateDto> {
@@ -21,4 +22,11 @@ public interface EvenementMapper extends GenericMapper<Evenement, EvenementRespo
     @Mapping(target = "bibliotheque", ignore = true )
     @Mapping(target = "typeEvenement", ignore = true)
     Evenement toEntity(EvenementCreateDto dto);
+
+    @Override
+    @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
+    @Mapping(target = "bibliotheque", ignore = true)
+    @Mapping(target = "typeEvenement", ignore = true)
+    @Mapping(target = "id", ignore = true)
+    void updateFromDto(EvenementCreateDto dto, @MappingTarget Evenement editeur);
 }
