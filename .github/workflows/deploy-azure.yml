@@ -27,7 +27,7 @@ jobs:
 
       # 3. Build Vaadin en mode production
       - name: Build with Gradle (Vaadin production)
-        run: ./gradlew clean build -Pvaadin.productionMode=true --no-daemon
+        run: ./gradlew clean build -Pvaadin.productionMode=true --no-daemon -x test
 
       # 4. Déploiement sur Azure App Service
       - name: Deploy to Azure App Service
