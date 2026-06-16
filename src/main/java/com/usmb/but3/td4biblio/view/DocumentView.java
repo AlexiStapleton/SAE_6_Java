@@ -17,6 +17,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
+import com.usmb.but3.td4biblio.enumeration.ChampRechercheDocument;
 import com.usmb.but3.td4biblio.enumeration.TypeRecherche;
 import com.vaadin.flow.component.combobox.ComboBox;
 
@@ -36,6 +37,7 @@ public class DocumentView extends VerticalLayout {
     final Grid<DocumentResponseDto> grid;
     final TextField filter;
     final ComboBox<TypeRecherche> typeRecherche;
+    final ComboBox<ChampRechercheDocument> champRecherche;
     private final Button addNewBtn;
 
     public DocumentView(DocumentService documentService, DocumentEditor editor) {
@@ -45,6 +47,7 @@ public class DocumentView extends VerticalLayout {
         this.grid      = new Grid<>(DocumentResponseDto.class);
         this.filter    = new TextField();
         this.typeRecherche = new ComboBox<>("Type de recherche");
+        this.champRecherche = new ComboBox<>("Champ");
         this.addNewBtn = new Button("Nouveau document", VaadinIcon.PLUS.create());
 
         // ------------------------------------------------------------------
@@ -52,6 +55,7 @@ public class DocumentView extends VerticalLayout {
         // ------------------------------------------------------------------
         HorizontalLayout actions =
         new HorizontalLayout(
+                champRecherche,
                 filter,
                 typeRecherche,
                 addNewBtn
@@ -74,6 +78,18 @@ public class DocumentView extends VerticalLayout {
         // ------------------------------------------------------------------
         // Filtre
         // ------------------------------------------------------------------
+        champRecherche.setItems(
+                ChampRechercheDocument.values()
+        );
+
+        champRecherche.setItemLabelGenerator(
+                ChampRechercheDocument::getLabel
+        );
+
+        champRecherche.setValue(
+                ChampRechercheDocument.TITRE
+        );
+
         typeRecherche.setItems(TypeRecherche.values());
         typeRecherche.setItemLabelGenerator(TypeRecherche::getLabel);
         typeRecherche.setValue(TypeRecherche.CONTIENT);
@@ -81,6 +97,9 @@ public class DocumentView extends VerticalLayout {
         filter.setPlaceholder("Rechercher par titre");
         filter.setClearButtonVisible(true);
         filter.setValueChangeMode(ValueChangeMode.LAZY);
+        champRecherche.addValueChangeListener(
+        e -> listDocuments(filter.getValue())
+);
         filter.addValueChangeListener(e -> listDocuments(e.getValue()));
         typeRecherche.addValueChangeListener(
                 e -> listDocuments(filter.getValue())
@@ -109,32 +128,27 @@ public class DocumentView extends VerticalLayout {
     // ------------------------------------------------------------------
     void listDocuments(String filterText) {
 
-        if (!StringUtils.hasText(filterText)) {
-            grid.setItems(documentService.getAll());
-            return;
+                if (!StringUtils.hasText(filterText)) {
+                        grid.setItems(documentService.getAll());
+                        return;
+                }
+
+                ChampRechercheDocument champ =
+                        champRecherche.getValue() == null
+                                ? ChampRechercheDocument.TITRE
+                                : champRecherche.getValue();
+
+                TypeRecherche type =
+                        typeRecherche.getValue() == null
+                                ? TypeRecherche.CONTIENT
+                                : typeRecherche.getValue();
+
+                grid.setItems(
+                        documentService.searchDocuments(
+                                champ,
+                                type,
+                                filterText
+                        )
+                );
         }
-
-        TypeRecherche type = typeRecherche.getValue();
-
-        if (type == null) {
-            type = TypeRecherche.CONTIENT;
-        }
-
-        switch (type) {
-            case CONTIENT ->
-                    grid.setItems(
-                            documentService.searchByTitre(filterText)
-                    );
-
-            case COMMENCE_PAR ->
-                    grid.setItems(
-                            documentService.searchByTitreStartsWith(filterText)
-                    );
-
-            case EGAL ->
-                    grid.setItems(
-                            documentService.searchByTitreEquals(filterText)
-                    );
-        }
-    }
 }
