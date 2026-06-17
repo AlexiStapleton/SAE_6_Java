@@ -1,4 +1,4 @@
-package com.usmb.but3.td4biblio.mapper;
+package com.usmb.but3.td4biblio.repository;
 
 import com.usmb.but3.td4biblio.entity.Utilisateur;
 import org.springframework.data.jpa.repository.JpaRepository;
