@@ -16,6 +16,7 @@ import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import com.vaadin.flow.spring.annotation.UIScope;
+import com.vaadin.flow.component.html.Image;
 
 /**
  * Éditeur de Document — même architecture qu'AuteurEditor.
@@ -43,7 +44,7 @@ public class DocumentEditor extends VerticalLayout implements KeyNotifier {
     TextField nomBibliotheque  = new TextField("Bibliothèque");
     TextField nomGenreDocument = new TextField("Genre");
     TextField format           = new TextField("Format");
-    TextField gif              = new TextField("Gif");
+    Image gif = new Image();
     TextField codeEmplacement  = new TextField("Code emplacement");
     TextArea  description      = new TextArea("Description");
     DatePicker datePublication = new DatePicker("Date de publication");
@@ -70,7 +71,10 @@ public class DocumentEditor extends VerticalLayout implements KeyNotifier {
         nomBibliotheque.setReadOnly(true);
         nomGenreDocument.setReadOnly(true);
         format.setReadOnly(true);
-        gif.setReadOnly(true);
+        gif.setWidth("300px");
+        gif.setHeight("300px");
+        gif.getStyle()
+            .set("object-fit", "contain");
         codeEmplacement.setReadOnly(true);
         description.setReadOnly(true);
         datePublication.setReadOnly(true);
@@ -111,24 +115,31 @@ public class DocumentEditor extends VerticalLayout implements KeyNotifier {
      * via getById() et affiche le formulaire — exactement comme AuteurEditor.editAuteur().
      */
     public final void editDocument(DocumentResponseDto dto) {
-        if (dto == null) {
-            setVisible(false);
-            return;
-        }
+    if (dto == null) {
+        setVisible(false);
+        return;
+    }
 
         final boolean persisted = dto.getId() != null;
 
         if (persisted) {
-            // Charge le détail complet depuis le service (getById héritée retourne DetailDto)
             document = documentService.getById(dto.getId());
         } else {
-            // Nouveau document : DTO de détail vide
             document = new DocumentDetailResponseDto();
         }
 
         cancel.setVisible(persisted);
 
         binder.setBean(document);
+
+        String url = document.getGif();
+        if (url != null && !url.isBlank()) {
+            gif.setSrc(url);
+            gif.setVisible(true);
+        } else {
+            gif.setVisible(false);
+        }
+
         setVisible(true);
         titre.focus();
     }

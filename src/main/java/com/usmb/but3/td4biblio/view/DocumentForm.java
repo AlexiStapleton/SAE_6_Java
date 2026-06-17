@@ -7,13 +7,19 @@ import com.usmb.but3.td4biblio.dto.DocumentCreateDto;
 import com.usmb.but3.td4biblio.dto.DocumentFormDto;
 import com.usmb.but3.td4biblio.dto.DocumentResponseDto;
 import com.usmb.but3.td4biblio.dto.DvdCreateDto;
+import com.usmb.but3.td4biblio.dto.DvdDetailResponseDto;
 import com.usmb.but3.td4biblio.dto.EditeurResponseDto;
 import com.usmb.but3.td4biblio.dto.GenreDocumentResponseDto;
 import com.usmb.but3.td4biblio.dto.LivreCreateDto;
+import com.usmb.but3.td4biblio.dto.LivreDetailResponseDto;
+import com.usmb.but3.td4biblio.entity.Dvd;
+import com.usmb.but3.td4biblio.entity.Livre;
+import com.usmb.but3.td4biblio.dto.DocumentDetailResponseDto;
 import com.usmb.but3.td4biblio.enumeration.TypeDocument;
 import com.usmb.but3.td4biblio.service.AuteurService;
 import com.usmb.but3.td4biblio.service.BibliothequeService;
 import com.usmb.but3.td4biblio.service.CodeRaisonService;
+import com.usmb.but3.td4biblio.service.DocumentService;
 import com.usmb.but3.td4biblio.service.DvdService;
 import com.usmb.but3.td4biblio.service.EditeurService;
 import com.usmb.but3.td4biblio.service.GenreDocumentService;
@@ -32,16 +38,20 @@ import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import com.vaadin.flow.spring.annotation.UIScope;
 
+import com.usmb.but3.td4biblio.entity.Document;
+
 @SpringComponent
 @UIScope
 public class DocumentForm extends Dialog {
 
     private final LivreService livreService;
     private final DvdService dvdService;
+    private final DocumentService documentService;
 
     public DocumentForm(
         LivreService livreService,
         DvdService dvdService,
+        DocumentService documentService,
         AuteurService auteurService,
         EditeurService editeurService,
         BibliothequeService bibliothequeService,
@@ -51,6 +61,7 @@ public class DocumentForm extends Dialog {
 
         this.livreService = livreService;
         this.dvdService = dvdService;
+        this.documentService = documentService;
 
         typeDocument.setItems(
                 TypeDocument.values()
@@ -238,39 +249,112 @@ public class DocumentForm extends Dialog {
         open();
     }
 
-    public void openEditDialog(
-        DocumentResponseDto document
-    ) {
+        public void openEditDialog(
+                DocumentResponseDto document
+        )
+        {
+                editingId = document.getId();
 
-        editingId = document.getId();
+                DocumentDetailResponseDto detail =
+                        documentService.getById(
+                                document.getId()
+                        );
 
-        dto = new DocumentFormDto();
+                dto = new DocumentFormDto();
 
-        dto.setTitre(document.getTitre());
-        dto.setGif(
-                document.getGif()
-        );
-        dto.setFormat(document.getFormat());
-        dto.setDescription(
-                document.getDescription()
-        );
-        dto.setDatePublication(
-                document.getDatePublication()
-        );
-        dto.setDateAcquisition(
-                document.getDateAcquisition()
-        );
-        dto.setCodeEmplacement(
-                document.getCodeEmplacement()
-        );
-        dto.setEmpruntable(
-                document.getEmpruntable()
-        );
+                dto.setTitre(
+                        detail.getTitre()
+                );
 
-        binder.setBean(dto);
+                dto.setGif(
+                        detail.getGif()
+                );
 
-        open();
-    }
+                dto.setFormat(
+                        detail.getFormat()
+                );
+
+                dto.setDescription(
+                        detail.getDescription()
+                );
+
+                dto.setDatePublication(
+                        detail.getDatePublication()
+                );
+
+                dto.setDateAcquisition(
+                        detail.getDateAcquisition()
+                );
+
+                dto.setCodeEmplacement(
+                        detail.getCodeEmplacement()
+                );
+
+                dto.setEmpruntable(
+                        detail.getEmpruntable()
+                );
+
+                binder.setBean(dto);
+
+                auteur.setValue(
+                        detail.getAuteur()
+                );
+
+                editeur.setValue(
+                        detail.getEditeur()
+                );
+
+                bibliotheque.setValue(
+                        detail.getBibliotheque()
+                );
+
+                genre.setValue(
+                        detail.getGenre()
+                );
+
+                codeRaison.setValue(
+                        detail.getCodeRaison()
+                );
+
+                if (detail.getType() == TypeDocument.LIVRE) {
+
+                        typeDocument.setValue(
+                                TypeDocument.LIVRE
+                        );
+
+                        LivreDetailResponseDto livreDetail =
+                                livreService.getById(document.getId());
+
+                        nbPages.setValue(
+                                livreDetail.getNbPages()
+                        );
+
+                        codeIsbn.setValue(
+                                livreDetail.getCodeIsbn() == null
+                                        ? ""
+                                        : livreDetail.getCodeIsbn()
+                        );
+                }
+                else if (detail.getType() == TypeDocument.DVD) {
+
+                        typeDocument.setValue(
+                                TypeDocument.DVD
+                        );
+
+                        DvdDetailResponseDto dvdDetail =
+                                dvdService.getById(document.getId());
+
+                        if (dvdDetail.getDuree() != null) {
+                        duree.setValue(
+                                dvdDetail.getDuree()
+                        );
+                        }
+                }
+
+                updateFields();
+
+                open();
+        }
 
     private ChangeHandler changeHandler;
 

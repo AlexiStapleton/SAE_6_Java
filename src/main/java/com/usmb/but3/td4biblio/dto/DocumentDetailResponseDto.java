@@ -8,11 +8,14 @@ import lombok.NoArgsConstructor;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
+import com.usmb.but3.td4biblio.enumeration.TypeDocument;
+
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
 public class DocumentDetailResponseDto {
     private Integer Id;
+    private TypeDocument type;
     private AuteurResponseDto auteur;
     private EditeurResponseDto editeur;
     private BibliothequeResponseDto bibliotheque;
