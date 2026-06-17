@@ -79,7 +79,8 @@ Afin de garantir un code de qualité nous avons mis en place certaines bonnes pr
 - Pattern repository afin de centraliser l'accès aux données dans une seule couche
 - Utilisation d'un docker compose en environnement de developpement afin de déployer très simplement une base de données postgreSQL
 - Mise en place de DTOs afin de contrôler les données qui sont échangées dans l'application
-- Utilisation d'abstract service afin de garder une logique commune. 
+- Utilisation d'abstract service afin de garder une logique commune.
+- Emploi de GitFlow afin d'assurer un bon versioning du code
 
 ## Tests unitaires et test moq
 
