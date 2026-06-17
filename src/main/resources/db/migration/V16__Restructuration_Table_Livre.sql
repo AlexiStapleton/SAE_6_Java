@@ -23,4 +23,4 @@ CREATE TABLE IF NOT EXISTS biblio.dvd (
     duree INTEGER
     );
 
-ALTER TABLE biblio.dvd OWNER TO admin;
+-- ALTER TABLE biblio.dvd OWNER TO admin;
