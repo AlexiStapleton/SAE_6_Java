@@ -6,7 +6,7 @@ CREATE TABLE IF NOT EXISTS biblio.type_auteur (
     );
 
 ALTER SEQUENCE biblio.type_auteur_id_seq OWNED BY biblio.type_auteur.id;
--- ALTER TABLE biblio.type_auteur OWNER TO admin;
+ALTER TABLE biblio.type_auteur OWNER TO admin;
 
 CREATE TABLE IF NOT EXISTS biblio.auteur_type_auteur (
     auteur_id INTEGER NOT NULL CONSTRAINT fk_ata_auteur REFERENCES biblio.auteur(id),
@@ -14,4 +14,4 @@ CREATE TABLE IF NOT EXISTS biblio.auteur_type_auteur (
     PRIMARY KEY (auteur_id, type_auteur_id)
     );
 
--- ALTER TABLE biblio.auteur_type_auteur OWNER TO admin;
+ALTER TABLE biblio.auteur_type_auteur OWNER TO admin;

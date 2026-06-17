@@ -6,4 +6,4 @@ CREATE TABLE IF NOT EXISTS biblio.emprunt (
     PRIMARY KEY (utilisateur_id, document_id)
     );
 
--- ALTER TABLE biblio.emprunt OWNER TO admin;
+ALTER TABLE biblio.emprunt OWNER TO admin;
