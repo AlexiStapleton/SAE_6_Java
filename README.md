@@ -16,7 +16,7 @@ Admin1234
 | Mohamed  |     |    |
 | Pigné  |     |    |
 | Rob  | Docker-compose, gestion des comptes, ReadMe    |    |
-| Stapleton  |     |    |
+| Stapleton  | Migrations, Entitées, DTOs, Mapper, GlobalGenericService, Les services, Les Repositories, La page de gestion des Bibliothèques / Événements, tests unitaires, tests mock, déploiement azure     |    |
 
 
 **Fonctionnalités de l'application :**
