@@ -4,12 +4,17 @@ import com.usmb.but3.td4biblio.dto.DocumentCreateDto;
 import com.usmb.but3.td4biblio.dto.DocumentDetailResponseDto;
 import com.usmb.but3.td4biblio.dto.DocumentResponseDto;
 import com.usmb.but3.td4biblio.entity.Document;
+import com.usmb.but3.td4biblio.entity.Dvd;
+import com.usmb.but3.td4biblio.entity.Livre;
 import com.usmb.but3.td4biblio.exception.RessourceNotFoundException;
 import com.usmb.but3.td4biblio.mapper.DocumentMapper;
 import com.usmb.but3.td4biblio.repository.DocumentRepo;
+import com.usmb.but3.td4biblio.repository.DvdRepo;
+import com.usmb.but3.td4biblio.repository.LivreRepo;
 
 import com.usmb.but3.td4biblio.enumeration.ChampRechercheDocument;
 import com.usmb.but3.td4biblio.enumeration.TypeRecherche;
+import com.usmb.but3.td4biblio.enumeration.TypeDocument;
 
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
@@ -27,10 +32,14 @@ public class DocumentService
             DocumentCreateDto> {
 
     private final DocumentRepo documentRepo;
+    private final LivreRepo livreRepo;
+    private final DvdRepo dvdRepo;
 
-    public DocumentService(DocumentRepo repository, DocumentMapper mapper) {
+    public DocumentService(DocumentRepo repository, DocumentMapper mapper, LivreRepo livreRepo, DvdRepo dvdRepo) {
         super(repository, mapper);
         this.documentRepo = repository;
+        this.livreRepo = livreRepo;
+        this.dvdRepo = dvdRepo;
     }
 
 
@@ -53,6 +62,28 @@ public class DocumentService
         document.setEmpruntable(dto.getEmpruntable());
 
         return mapper.toResponse(documentRepo.save(document));
+    }
+
+    @Override
+    public DocumentDetailResponseDto getById(Integer id) {
+
+        DocumentDetailResponseDto dto = super.getById(id);
+
+        if (livreRepo.existsById(id)) {
+            dto.setType(TypeDocument.LIVRE);
+        } else if (dvdRepo.existsById(id)) {
+            dto.setType(TypeDocument.DVD);
+        }
+
+        return dto;
+    }
+
+    public Document getEntityById(Integer id) {
+        return documentRepo.findById(id)
+                .orElseThrow(() ->
+                        new RessourceNotFoundException(
+                                "Document non trouvé : " + id
+                        ));
     }
 
     /*   Méthodes de recherche   */
