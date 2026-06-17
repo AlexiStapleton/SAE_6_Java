@@ -1,6 +1,5 @@
 package com.usmb.but3.td4biblio.dto;
 
-import com.usmb.but3.td4biblio.entity.TypeAuteur;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

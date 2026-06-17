@@ -11,5 +11,5 @@ public class EditeurCreateDto {
     private String nom;
     private String lienSiteWeb;
     private String lienWikipedia;
-    private int adresseId;
+    private Integer adresseId;
 }
