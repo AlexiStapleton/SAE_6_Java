@@ -15,18 +15,40 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
+/**
+ * La couche Service où se trouve toute la logique métier des emprunts.
+ * Elle interagit avec la couche Repository pour accéder aux données.
+ * Gère les emprunts et leur relation avec les documents et utilisateurs.
+ */
 @Service
 @Transactional
 public class EmpruntService extends AbstractGenericService<Emprunt, Emprunt.EmpruntId, EmpruntResponseDto, EmpruntDetailResponseDto, EmpruntCreateDto> {
 
     private final UtilisateurRepo utilisateurRepository;
     private final DocumentRepo documentRepository;
+
+    /**
+     * Constructeur du service Emprunt.
+     * Injecte les dépendances nécessaires via le constructeur du service abstrait.
+     * @param repository - repository des emprunts
+     * @param mapper - mapper pour la conversion entre entités et DTOs
+     * @param utilisateurRepository - repository des utilisateurs
+     * @param documentRepository - repository des documents
+     */
     public EmpruntService(EmpruntRepo repository, EmpruntMapper mapper, UtilisateurRepo utilisateurRepository, DocumentRepo documentRepository){
         super(repository, mapper);
         this.utilisateurRepository = utilisateurRepository;
         this.documentRepository = documentRepository;
     }
 
+    /**
+     * Met à jour un emprunt existant à partir des données du DTO.
+     * Résout également les relations avec le document et l'utilisateur.
+     * @param id - identifiant composite de l'emprunt à mettre à jour
+     * @param dto - données de mise à jour
+     * @return le DTO détaillé de l'emprunt mis à jour
+     * @throws RessourceNotFoundException si l'emprunt, le document ou l'utilisateur n'existe pas
+     */
     @Override
     public EmpruntDetailResponseDto update(Emprunt.EmpruntId id, EmpruntCreateDto dto){
         Emprunt emprunt = repository.findById(id)
@@ -41,6 +63,14 @@ public class EmpruntService extends AbstractGenericService<Emprunt, Emprunt.Empr
         return mapper.toDetailResponse(repository.save(emprunt));
     }
 
+    /**
+     * Crée un nouvel emprunt à partir des données du DTO.
+     * Résout également les relations avec le document et l'utilisateur.
+     * La date de création est automatiquement définie à la date du jour.
+     * @param dto - données de création de l'emprunt
+     * @return le DTO détaillé de l'emprunt créé
+     * @throws RessourceNotFoundException si le document ou l'utilisateur spécifiés n'existent pas
+     */
     @Override
     public EmpruntDetailResponseDto create(EmpruntCreateDto dto) {
         Emprunt emprunt = mapper.toEntity(dto);
