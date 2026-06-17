@@ -243,6 +243,7 @@ public class DocumentForm extends Dialog {
         dto = new DocumentFormDto();
 
         dto.setEmpruntable(true);
+        dto.setDateAcquisition(java.time.LocalDate.now());
 
         binder.setBean(dto);
 

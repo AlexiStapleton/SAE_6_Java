@@ -21,6 +21,7 @@ import org.springframework.util.StringUtils;
 
 import com.usmb.but3.td4biblio.enumeration.ChampRechercheDocument;
 import com.usmb.but3.td4biblio.enumeration.TypeRecherche;
+import com.usmb.but3.td4biblio.enumeration.TypeDocument;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.usmb.but3.td4biblio.view.DocumentForm;
 
@@ -45,6 +46,9 @@ public class DocumentView extends VerticalLayout {
 
     private final DocumentForm form;
 
+    // Filtre par type (Tous / Livre / DVD)
+    final ComboBox<String> typeFilter;
+
     public DocumentView(DocumentService documentService, DocumentEditor editor, DocumentForm form) {
         this.documentService = documentService;
         this.editor = editor;
@@ -55,12 +59,17 @@ public class DocumentView extends VerticalLayout {
         this.typeRecherche = new ComboBox<>("Type de recherche");
         this.champRecherche = new ComboBox<>("Champ");
         this.addNewBtn = new Button("Nouveau document", VaadinIcon.PLUS.create());
+        this.typeFilter = new ComboBox<>("Type de document");
+        typeFilter.setItems("Tous", "Livre", "DVD");
+        typeFilter.setValue("Tous");
+        typeFilter.setWidth("130px");
 
         // ------------------------------------------------------------------
         // Layout
         // ------------------------------------------------------------------
         HorizontalLayout actions =
         new HorizontalLayout(
+                typeFilter,
                 champRecherche,
                 filter,
                 typeRecherche,
@@ -141,6 +150,9 @@ public class DocumentView extends VerticalLayout {
         typeRecherche.addValueChangeListener(
                 e -> listDocuments(filter.getValue())
         );
+        typeFilter.addValueChangeListener(
+                e -> listDocuments(filter.getValue())
+        );
 
         // ------------------------------------------------------------------
         // Sélection d'une ligne → ouvre l'éditeur
@@ -172,29 +184,39 @@ public class DocumentView extends VerticalLayout {
     // ------------------------------------------------------------------
     void listDocuments(String filterText) {
 
-                if (!StringUtils.hasText(filterText)) {
-                        grid.setItems(documentService.getAll());
-                        return;
-                }
-
-                ChampRechercheDocument champ =
-                        champRecherche.getValue() == null
-                                ? ChampRechercheDocument.TITRE
-                                : champRecherche.getValue();
-
-                TypeRecherche type =
-                        typeRecherche.getValue() == null
-                                ? TypeRecherche.CONTIENT
-                                : typeRecherche.getValue();
-
-                grid.setItems(
-                        documentService.searchDocuments(
-                                champ,
-                                type,
-                                filterText
-                        )
-                );
+        // Résolution du filtre type
+        String typeVal = typeFilter.getValue();
+        TypeDocument typeDoc = null;
+        if ("Livre".equals(typeVal)) {
+            typeDoc = TypeDocument.LIVRE;
+        } else if ("DVD".equals(typeVal)) {
+            typeDoc = TypeDocument.DVD;
         }
+
+        if (!StringUtils.hasText(filterText)) {
+            grid.setItems(documentService.getAll(typeDoc));
+            return;
+        }
+
+        ChampRechercheDocument champ =
+                champRecherche.getValue() == null
+                        ? ChampRechercheDocument.TITRE
+                        : champRecherche.getValue();
+
+        TypeRecherche type =
+                typeRecherche.getValue() == null
+                        ? TypeRecherche.CONTIENT
+                        : typeRecherche.getValue();
+
+        grid.setItems(
+                documentService.searchDocuments(
+                        champ,
+                        type,
+                        filterText,
+                        typeDoc
+                )
+        );
+    }
 
         private void openEditDialog(
                 DocumentResponseDto document

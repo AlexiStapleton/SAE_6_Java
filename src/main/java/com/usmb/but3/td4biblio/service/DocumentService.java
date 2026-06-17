@@ -86,34 +86,71 @@ public class DocumentService
                         ));
     }
 
+    /**
+     * Retourne tous les documents, filtrés optionnellement par type.
+     * Si typeDoc est null, retourne tous les documents.
+     */
+    public List<DocumentResponseDto> getAll(TypeDocument typeDoc) {
+        if (typeDoc == null) {
+            return getAll();
+        }
+        if (typeDoc == TypeDocument.LIVRE) {
+            return livreRepo.findAll()
+                    .stream()
+                    .map(mapper::toResponse)
+                    .toList();
+        } else {
+            return dvdRepo.findAll()
+                    .stream()
+                    .map(mapper::toResponse)
+                    .toList();
+        }
+    }
+
     /*   Méthodes de recherche   */
 
     public List<DocumentResponseDto> searchDocuments(
             ChampRechercheDocument champ,
             TypeRecherche type,
-            String valeur
+            String valeur,
+            TypeDocument typeDoc
     ) {
-
         List<Document> documents;
 
         switch (champ) {
-
-            case TITRE -> documents = searchTitre(type, valeur);
-
-            case AUTEUR -> documents = searchAuteur(type, valeur);
-
-            case EDITEUR -> documents = searchEditeur(type, valeur);
-
+            case TITRE      -> documents = searchTitre(type, valeur);
+            case AUTEUR     -> documents = searchAuteur(type, valeur);
+            case EDITEUR    -> documents = searchEditeur(type, valeur);
             case BIBLIOTHEQUE -> documents = searchBibliotheque(type, valeur);
+            case GENRE      -> documents = searchGenre(type, valeur);
+            default         -> documents = List.of();
+        }
 
-            case GENRE -> documents = searchGenre(type, valeur);
-
-            default -> documents = List.of();
+        // Filtrage par type si demandé
+        if (typeDoc != null) {
+            documents = documents.stream()
+                    .filter(doc -> {
+                        if (typeDoc == TypeDocument.LIVRE) {
+                            return livreRepo.existsById(doc.getId());
+                        } else {
+                            return dvdRepo.existsById(doc.getId());
+                        }
+                    })
+                    .toList();
         }
 
         return documents.stream()
                 .map(mapper::toResponse)
                 .toList();
+    }
+
+    /** Surcharge de compatibilité (sans filtre type) */
+    public List<DocumentResponseDto> searchDocuments(
+            ChampRechercheDocument champ,
+            TypeRecherche type,
+            String valeur
+    ) {
+        return searchDocuments(champ, type, valeur, null);
     }
 
     private List<Document> searchTitre(
