@@ -1,6 +1,5 @@
 package com.usmb.but3.td4biblio.dto;
 
-import com.usmb.but3.td4biblio.entity.TypeAuteur;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -23,4 +22,13 @@ public class AuteurDetailResponseDto {
 
     private List<TypeAuteurResponseDto> typesAuteur;
     private List<DocumentResponseDto> documents;
+
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class AdresseCreateDto {
+        private String rue;
+        private String codePostal;
+        private String ville;
+    }
 }
