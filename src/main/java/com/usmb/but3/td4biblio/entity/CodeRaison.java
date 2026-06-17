@@ -13,6 +13,7 @@ import lombok.NoArgsConstructor;
 public class CodeRaison {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer Id;
     private String nom;
     private String description;

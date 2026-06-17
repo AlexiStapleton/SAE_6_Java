@@ -13,6 +13,7 @@ import lombok.NoArgsConstructor;
 public class GenreDocument {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer Id;
     private String nom;
 }
