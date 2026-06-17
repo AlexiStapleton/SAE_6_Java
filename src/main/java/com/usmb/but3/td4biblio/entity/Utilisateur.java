@@ -28,7 +28,7 @@ public class Utilisateur {
     private String numeroCarte;
     private String hashMotDePasse;
 
-    @ManyToOne
+    @ManyToOne(optional = true)
     @JoinColumn(name = "adresse_id", nullable = false)
     private Adresse adresse;
 
