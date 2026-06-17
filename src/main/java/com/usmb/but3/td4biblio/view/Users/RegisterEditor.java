@@ -51,7 +51,11 @@ public class RegisterEditor extends VerticalLayout implements KeyNotifier {
 
         roleUtilisateur.setItems(RoleUtilisateur.values());
         roleUtilisateur.setItemLabelGenerator(Enum::name);
+        numeroCarte.setVisible(false);
 
+        roleUtilisateur.addValueChangeListener(e -> {
+            numeroCarte.setVisible(e.getValue() == RoleUtilisateur.EMPRUNTEUR);
+        });
         configureBinder();
 
         saveBtn.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
@@ -63,7 +67,8 @@ public class RegisterEditor extends VerticalLayout implements KeyNotifier {
         FormLayout form = new FormLayout(
                 nom, prenom, email,
                 dateNaissance,
-                numeroCarte, roleUtilisateur,
+                roleUtilisateur,
+                numeroCarte,
                 rue, codePostal, ville
         );
         form.setResponsiveSteps(
@@ -96,12 +101,14 @@ public class RegisterEditor extends VerticalLayout implements KeyNotifier {
                 .asRequired("La date de naissance est obligatoire")
                 .bind(RegisterRequest::getDateNaissance, RegisterRequest::setDateNaissance);
 
-        binder.forField(numeroCarte)
-                .bind(RegisterRequest::getNumeroCarte, RegisterRequest::setNumeroCarte);
 
         binder.forField(roleUtilisateur)
                 .asRequired("Le rôle est obligatoire")
                 .bind(RegisterRequest::getRoleUtilisateur, RegisterRequest::setRoleUtilisateur);
+
+        binder.forField(numeroCarte)
+                .bind(RegisterRequest::getNumeroCarte, RegisterRequest::setNumeroCarte);
+
 
         binder.forField(rue)
                 .asRequired("La rue est obligatoire")

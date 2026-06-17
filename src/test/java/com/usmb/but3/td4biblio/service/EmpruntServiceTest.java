@@ -8,7 +8,8 @@ import com.usmb.but3.td4biblio.entity.Emprunt;
 import com.usmb.but3.td4biblio.entity.Utilisateur;
 import com.usmb.but3.td4biblio.exception.RessourceNotFoundException;
 import com.usmb.but3.td4biblio.mapper.EmpruntMapper;
-import com.usmb.but3.td4biblio.mapper.UtilisateurRepo;
+import com.usmb.but3.td4biblio.repository.UserRepository;
+import com.usmb.but3.td4biblio.repository.UtilisateurRepo;
 import com.usmb.but3.td4biblio.repository.DocumentRepo;
 import com.usmb.but3.td4biblio.repository.EmpruntRepo;
 import org.junit.jupiter.api.BeforeEach;
@@ -31,7 +32,7 @@ import static org.mockito.Mockito.*;
 class EmpruntServiceTest {
 
     @Mock private EmpruntRepo empruntRepo;
-    @Mock private UtilisateurRepo utilisateurRepo;
+    @Mock private UserRepository utilisateurRepo;
     @Mock private DocumentRepo documentRepo;
     @Mock private EmpruntMapper mapper;
 

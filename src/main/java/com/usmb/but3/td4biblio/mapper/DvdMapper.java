@@ -32,6 +32,13 @@ public interface DvdMapper extends GenericMapper<Dvd, DvdResponseDto, DvdDetailR
     @Mapping(target = "updatedAt", ignore = true)
     Dvd toEntity (DvdCreateDto dto);
 
+    @Mapping(source = "auteur.id", target = "auteurId")
+    @Mapping(source = "editeur.id", target = "editeurId")
+    @Mapping(source = "bibliotheque.id", target = "bibliothequeId")
+    @Mapping(source = "genre.id", target = "genreId")
+    @Mapping(source = "codeRaison.id", target = "codeRaisonId")
+    DvdCreateDto fromDetailToCreate(DvdDetailResponseDto dto);
+
 
     @Override
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
