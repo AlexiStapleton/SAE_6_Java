@@ -36,8 +36,8 @@ public class Utilisateur {
     private List<Emprunt> emprunts;
 
     @Enumerated(EnumType.STRING)
-//    @JdbcTypeCode(SqlTypes.NAMED_ENUM)
-    @Column(name = "role_utilisateur", columnDefinition = "biblio.role_utilisateur")
+    @JdbcTypeCode(SqlTypes.NAMED_ENUM)
+    @Column(name = "role_utilisateur")
     private RoleUtilisateur roleUtilisateur;
 
 }
