@@ -14,7 +14,7 @@ public interface AuteurMapper extends GenericMapper<Auteur, AuteurResponseDto, A
     @Named("auteurToResponse")
     AuteurResponseDto toResponse(Auteur auteur);
 
-    @Named("editeurToDetailResponse")
+    @Named("auteurToDetailResponse")
     AuteurResponseDto toDetailResponse(Auteur entity);
 
     @Mapping( target = "documents", ignore = true)

@@ -11,8 +11,5 @@ public class EditeurCreateDto {
     private String nom;
     private String lienSiteWeb;
     private String lienWikipedia;
-    // Adresse inline — plus besoin d'un ID externe
-    private String rue;
-    private String codePostal;
-    private String ville;
+    private AdresseCreateDto adresse;
 }

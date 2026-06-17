@@ -1,5 +1,6 @@
 package com.usmb.but3.td4biblio.service;
 
+import com.usmb.but3.td4biblio.DTO.AdresseCreateDto;
 import com.usmb.but3.td4biblio.DTO.EditeurCreateDto;
 import com.usmb.but3.td4biblio.DTO.EditeurResponseDto;
 import com.usmb.but3.td4biblio.entity.Adresse;
@@ -30,11 +31,7 @@ public class EditeurService
 
     @Override
     public EditeurResponseDto create(EditeurCreateDto dto) {
-        Editeur editeur = new Editeur();
-        editeur.setNom(dto.getNom());
-        editeur.setLienSiteWeb(dto.getLienSiteWeb());
-        editeur.setLienWikipedia(dto.getLienWikipedia());
-        editeur.setAdresse(resolveAdresse(dto, null));
+        Editeur editeur = mapper.toEntity(dto);
         return mapper.toResponse(editeurRepo.save(editeur));
     }
 
@@ -46,7 +43,7 @@ public class EditeurService
         editeur.setNom(dto.getNom());
         editeur.setLienSiteWeb(dto.getLienSiteWeb());
         editeur.setLienWikipedia(dto.getLienWikipedia());
-        editeur.setAdresse(resolveAdresse(dto, editeur.getAdresse()));
+        editeur.setAdresse(resolveAdresse(dto.getAdresse(), editeur.getAdresse()));
 
         return mapper.toResponse(editeurRepo.save(editeur));
     }
@@ -58,23 +55,24 @@ public class EditeurService
                 .toList();
     }
 
-    /**
-     * Met à jour ou crée une adresse à partir des champs du DTO.
-     * Si aucun champ adresse n'est renseigné, on conserve l'adresse existante.
-     */
-    private Adresse resolveAdresse(EditeurCreateDto dto, Adresse existing) {
-        boolean hasAdresseData = StringUtils.hasText(dto.getRue())
-                || StringUtils.hasText(dto.getCodePostal())
-                || StringUtils.hasText(dto.getVille());
+
+    private Adresse resolveAdresse(AdresseCreateDto adresseDto, Adresse existing) {
+        if (adresseDto == null) {
+            return existing;
+        }
+
+        boolean hasAdresseData = StringUtils.hasText(adresseDto.getRue())
+                || StringUtils.hasText(adresseDto.getCodePostal())
+                || StringUtils.hasText(adresseDto.getVille());
 
         if (!hasAdresseData) {
             return existing;
         }
 
         Adresse adresse = existing != null ? existing : new Adresse();
-        adresse.setRue(dto.getRue());
-        adresse.setCodePostal(dto.getCodePostal());
-        adresse.setVille(dto.getVille());
+        adresse.setRue(adresseDto.getRue());
+        adresse.setCodePostal(adresseDto.getCodePostal());
+        adresse.setVille(adresseDto.getVille());
         return adresseRepo.save(adresse);
     }
 }

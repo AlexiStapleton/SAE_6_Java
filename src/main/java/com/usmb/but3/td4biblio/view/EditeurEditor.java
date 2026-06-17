@@ -1,5 +1,6 @@
 package com.usmb.but3.td4biblio.view;
 
+import com.usmb.but3.td4biblio.DTO.AdresseCreateDto;
 import com.usmb.but3.td4biblio.DTO.AdresseResponseDto;
 import com.usmb.but3.td4biblio.DTO.EditeurCreateDto;
 import com.usmb.but3.td4biblio.DTO.EditeurResponseDto;
@@ -20,6 +21,7 @@ import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import com.vaadin.flow.spring.annotation.UIScope;
 import com.vaadin.flow.theme.lumo.LumoUtility;
+import lombok.Setter;
 
 @SpringComponent
 @UIScope
@@ -37,8 +39,6 @@ public class EditeurEditor extends VerticalLayout implements KeyNotifier {
     private String snapshotRue;
     private String snapshotCodePostal;
     private String snapshotVille;
-
-    private final H3 formTitle = new H3("Fiche éditeur");
 
     TextField nom          = new TextField("Nom de la société");
     TextField lienSiteWeb  = new TextField("Site web");
@@ -62,6 +62,7 @@ public class EditeurEditor extends VerticalLayout implements KeyNotifier {
     HorizontalLayout editActions  = new HorizontalLayout(save, cancel, delete);
 
     Binder<EditeurResponseDto> binder = new Binder<>(EditeurResponseDto.class);
+    @Setter
     private ChangeHandler changeHandler;
 
     public EditeurEditor(EditeurService editeurService, SessionService sessionService) {
@@ -76,6 +77,7 @@ public class EditeurEditor extends VerticalLayout implements KeyNotifier {
                 LumoUtility.Padding.LARGE,
                 LumoUtility.Margin.Top.MEDIUM
         );
+        H3 formTitle = new H3("Fiche éditeur");
         formTitle.addClassNames(LumoUtility.Margin.NONE, LumoUtility.TextColor.PRIMARY);
 
         nom.setWidthFull();
@@ -185,19 +187,19 @@ public class EditeurEditor extends VerticalLayout implements KeyNotifier {
     }
 
     private boolean hasChanged() {
-        return !eq(snapshotNom,           nom.getValue())
-            || !eq(snapshotLienSiteWeb,   lienSiteWeb.getValue())
-            || !eq(snapshotLienWikipedia, lienWikipedia.getValue())
-            || !eq(snapshotRue,           rue.getValue())
-            || !eq(snapshotCodePostal,    codePostal.getValue())
-            || !eq(snapshotVille,         ville.getValue());
+        return eq(snapshotNom, nom.getValue())
+            || eq(snapshotLienSiteWeb, lienSiteWeb.getValue())
+            || eq(snapshotLienWikipedia, lienWikipedia.getValue())
+            || eq(snapshotRue, rue.getValue())
+            || eq(snapshotCodePostal, codePostal.getValue())
+            || eq(snapshotVille, ville.getValue());
     }
 
     private static boolean eq(String a, String b) {
         // Traite null et "" comme équivalents pour éviter les faux positifs
         String sa = a == null ? "" : a;
         String sb = b == null ? "" : b;
-        return sa.equals(sb);
+        return !sa.equals(sb);
     }
 
     // ------------------------------------------------------------------ //
@@ -226,13 +228,17 @@ public class EditeurEditor extends VerticalLayout implements KeyNotifier {
             return;
         }
 
+        AdresseCreateDto adresseDto = new AdresseCreateDto(
+                rue.getValue(),
+                codePostal.getValue(),
+                ville.getValue()
+        );
+
         EditeurCreateDto dto = new EditeurCreateDto(
                 nom.getValue(),
                 lienSiteWeb.getValue(),
                 lienWikipedia.getValue(),
-                rue.getValue(),
-                codePostal.getValue(),
-                ville.getValue()
+                adresseDto
         );
 
         if (isNew) {
@@ -290,10 +296,6 @@ public class EditeurEditor extends VerticalLayout implements KeyNotifier {
         } else {
             enterReadMode();
         }
-    }
-
-    public void setChangeHandler(ChangeHandler h) {
-        changeHandler = h;
     }
 
     // ------------------------------------------------------------------ //
