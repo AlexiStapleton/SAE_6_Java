@@ -51,8 +51,12 @@ public abstract class AbstractDocumentService<T extends Document, RespDto extend
                 .orElseThrow(() -> new RessourceNotFoundException("Bibliotheque non trouvé : " + dto.getBibliothequeId())));
         entity.setGenre(genreRepository.findById(dto.getGenreId())
                 .orElseThrow(() -> new RessourceNotFoundException("Genre non trouvé : " + dto.getGenreId())));
-        entity.setCodeRaison(codeRaisonRepository.findById(dto.getCodeRaisonId())
-                .orElseThrow(() -> new RessourceNotFoundException("Code Raison non trouvé : " + dto.getCodeRaisonId())));
+        if (dto.getCodeRaisonId() != null) {
+            entity.setCodeRaison(codeRaisonRepository.findById(dto.getCodeRaisonId())
+                    .orElseThrow(() -> new RessourceNotFoundException("Code Raison non trouvé : " + dto.getCodeRaisonId())));
+        } else {
+            entity.setCodeRaison(null);
+        }
 
         entity.setCreatedAt(LocalDateTime.now());
         entity.setUpdatedAt(LocalDateTime.now());
@@ -75,8 +79,12 @@ public abstract class AbstractDocumentService<T extends Document, RespDto extend
                 .orElseThrow(() -> new RessourceNotFoundException("Bibliotheque non trouvé : " + dto.getBibliothequeId())));
         entity.setGenre(genreRepository.findById(dto.getGenreId())
                 .orElseThrow(() -> new RessourceNotFoundException("Genre non trouvé : " + dto.getGenreId())));
-        entity.setCodeRaison(codeRaisonRepository.findById(dto.getCodeRaisonId())
-                .orElseThrow(() -> new RessourceNotFoundException("Code Raison non trouvé : " + dto.getCodeRaisonId())));
+        if (dto.getCodeRaisonId() != null) {
+            entity.setCodeRaison(codeRaisonRepository.findById(dto.getCodeRaisonId())
+                    .orElseThrow(() -> new RessourceNotFoundException("Code Raison non trouvé : " + dto.getCodeRaisonId())));
+        } else {
+            entity.setCodeRaison(null);
+        }
 
         entity.setUpdatedAt(LocalDateTime.now());
 

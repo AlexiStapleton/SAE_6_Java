@@ -57,8 +57,6 @@ public class DocumentEditor extends VerticalLayout implements KeyNotifier {
     Button cancel = new Button("Fermer", VaadinIcon.CLOSE.create());
     HorizontalLayout actions = new HorizontalLayout(cancel);
 
-    Binder<DocumentDetailResponseDto> binder = new Binder<>(DocumentDetailResponseDto.class);
-
     private ChangeHandler changeHandler;
 
     public DocumentEditor(DocumentService documentService) {
@@ -97,9 +95,6 @@ public class DocumentEditor extends VerticalLayout implements KeyNotifier {
                 actions
         );
 
-        // Liaison automatique par convention de nommage
-        binder.bindInstanceFields(this);
-
         cancel.addClickListener(e -> setVisible(false));
         addKeyPressListener(Key.ESCAPE, e -> setVisible(false));
 
@@ -115,10 +110,10 @@ public class DocumentEditor extends VerticalLayout implements KeyNotifier {
      * via getById() et affiche le formulaire — exactement comme AuteurEditor.editAuteur().
      */
     public final void editDocument(DocumentResponseDto dto) {
-    if (dto == null) {
-        setVisible(false);
-        return;
-    }
+        if (dto == null) {
+            setVisible(false);
+            return;
+        }
 
         final boolean persisted = dto.getId() != null;
 
@@ -130,7 +125,37 @@ public class DocumentEditor extends VerticalLayout implements KeyNotifier {
 
         cancel.setVisible(persisted);
 
-        binder.setBean(document);
+        // Remplissage manuel pour éviter les problèmes de binding
+        // sur les objets imbriqués (auteur, editeur, etc.)
+        titre.setValue(nullSafe(document.getTitre()));
+        nomAuteur.setValue(
+            document.getAuteur() != null
+                ? nullSafe(document.getAuteur().getDesc())
+                : ""
+        );
+        nomEditeur.setValue(
+            document.getEditeur() != null
+                ? nullSafe(document.getEditeur().getNom())
+                : ""
+        );
+        nomBibliotheque.setValue(
+            document.getBibliotheque() != null
+                ? nullSafe(document.getBibliotheque().getNom())
+                : ""
+        );
+        nomGenreDocument.setValue(
+            document.getGenre() != null
+                ? nullSafe(document.getGenre().getNom())
+                : ""
+        );
+        format.setValue(nullSafe(document.getFormat()));
+        codeEmplacement.setValue(nullSafe(document.getCodeEmplacement()));
+        description.setValue(nullSafe(document.getDescription()));
+        datePublication.setValue(document.getDatePublication());
+        dateAcquisition.setValue(document.getDateAcquisition());
+        empruntable.setValue(
+            document.getEmpruntable() != null && document.getEmpruntable()
+        );
 
         String url = document.getGif();
         if (url != null && !url.isBlank()) {
@@ -142,6 +167,10 @@ public class DocumentEditor extends VerticalLayout implements KeyNotifier {
 
         setVisible(true);
         titre.focus();
+    }
+
+    private String nullSafe(String value) {
+        return value != null ? value : "";
     }
 
     public void setChangeHandler(ChangeHandler h) {
