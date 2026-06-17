@@ -1,11 +1,8 @@
 package com.usmb.but3.td4biblio.dto;
 
-import com.usmb.but3.td4biblio.entity.Adresse;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.util.List;
 
 @NoArgsConstructor
 @AllArgsConstructor

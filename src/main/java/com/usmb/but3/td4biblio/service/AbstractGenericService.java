@@ -2,6 +2,7 @@ package com.usmb.but3.td4biblio.service;
 
 import com.usmb.but3.td4biblio.exception.RessourceNotFoundException;
 import com.usmb.but3.td4biblio.mapper.GenericMapper;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -21,6 +22,7 @@ import java.util.List;
  */
 @RequiredArgsConstructor
 @Slf4j
+@Transactional
 public abstract class AbstractGenericService<T, ID, RespDto, DetailDto, CreateDto>
         implements GenericService<T, ID, RespDto, DetailDto ,CreateDto> {
 
