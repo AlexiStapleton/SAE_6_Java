@@ -1,9 +1,7 @@
 package com.usmb.but3.td4biblio.view;
 
-import com.usmb.but3.td4biblio.DTO.AdresseCreateDto;
-import com.usmb.but3.td4biblio.DTO.AdresseResponseDto;
-import com.usmb.but3.td4biblio.DTO.EditeurCreateDto;
-import com.usmb.but3.td4biblio.DTO.EditeurResponseDto;
+import com.usmb.but3.td4biblio.dto.*;
+import com.usmb.but3.td4biblio.entity.RoleUtilisateur;
 import com.usmb.but3.td4biblio.entity.Utilisateur;
 import com.usmb.but3.td4biblio.service.EditeurService;
 import com.usmb.but3.td4biblio.service.SessionService;
@@ -30,7 +28,8 @@ public class EditeurEditor extends VerticalLayout implements KeyNotifier {
     private final EditeurService editeurService;
     private final SessionService sessionService;
 
-    private EditeurResponseDto editeur;
+    private EditeurDetailResponseDto editeur;
+    private AdresseResponseDto adresse;
 
     // Snapshot des valeurs avant édition, pour détecter les changements
     private String snapshotNom;
@@ -61,7 +60,7 @@ public class EditeurEditor extends VerticalLayout implements KeyNotifier {
     HorizontalLayout readActions  = new HorizontalLayout(edit);
     HorizontalLayout editActions  = new HorizontalLayout(save, cancel, delete);
 
-    Binder<EditeurResponseDto> binder = new Binder<>(EditeurResponseDto.class);
+    Binder<EditeurDetailResponseDto> binder = new Binder<>(EditeurDetailResponseDto.class);
     @Setter
     private ChangeHandler changeHandler;
 
@@ -107,13 +106,13 @@ public class EditeurEditor extends VerticalLayout implements KeyNotifier {
 
         // --- Bindings ---
         binder.forField(nom)
-                .bind(EditeurResponseDto::getNom, EditeurResponseDto::setNom);
+                .bind(EditeurDetailResponseDto::getNom, EditeurDetailResponseDto::setNom);
 
         binder.forField(lienSiteWeb)
-                .bind(EditeurResponseDto::getLienSiteWeb, EditeurResponseDto::setLienSiteWeb);
+                .bind(EditeurDetailResponseDto::getLienSiteWeb, EditeurDetailResponseDto::setLienSiteWeb);
 
         binder.forField(lienWikipedia)
-                .bind(EditeurResponseDto::getLienWikipedia, EditeurResponseDto::setLienWikipedia);
+                .bind(EditeurDetailResponseDto::getLienWikipedia, EditeurDetailResponseDto::setLienWikipedia);
 
         binder.forField(rue)
                 .bind(e -> e.getAdresse() != null ? e.getAdresse().getRue() : "",
@@ -212,7 +211,6 @@ public class EditeurEditor extends VerticalLayout implements KeyNotifier {
     }
 
     void save() {
-        // Validation manuelle : le binder ne peut pas valider des champs disabled
         if (nom.getValue() == null || nom.getValue().isBlank()) {
             nom.setInvalid(true);
             nom.setErrorMessage("Le nom est obligatoire");
@@ -223,7 +221,6 @@ public class EditeurEditor extends VerticalLayout implements KeyNotifier {
         boolean isNew = editeur.getId() == null;
 
         if (!isNew && !hasChanged()) {
-            // Aucune modification : retour en lecture sans appel API
             enterReadMode();
             return;
         }
@@ -234,11 +231,13 @@ public class EditeurEditor extends VerticalLayout implements KeyNotifier {
                 ville.getValue()
         );
 
+        Integer adresseId = editeurService.resolveAdresseId(adresseDto);
+
         EditeurCreateDto dto = new EditeurCreateDto(
                 nom.getValue(),
                 lienSiteWeb.getValue(),
                 lienWikipedia.getValue(),
-                adresseDto
+                adresseId
         );
 
         if (isNew) {
@@ -272,7 +271,7 @@ public class EditeurEditor extends VerticalLayout implements KeyNotifier {
      * - Si l'éditeur est nouveau (id == null) → mode édition directement.
      * - Si l'éditeur est existant → mode lecture seule.
      */
-    public final void editEditeur(EditeurResponseDto e) {
+    public final void editEditeur(EditeurDetailResponseDto e) {
         if (e == null) {
             setVisible(false);
             return;
@@ -302,7 +301,7 @@ public class EditeurEditor extends VerticalLayout implements KeyNotifier {
     //  Utilitaires                                                         //
     // ------------------------------------------------------------------ //
 
-    private AdresseResponseDto ensureAdresse(EditeurResponseDto e) {
+    private AdresseResponseDto ensureAdresse(EditeurDetailResponseDto e) {
         if (e.getAdresse() == null) {
             e.setAdresse(new AdresseResponseDto());
         }
@@ -311,7 +310,7 @@ public class EditeurEditor extends VerticalLayout implements KeyNotifier {
 
     private boolean isBibliothecaire() {
         return sessionService.getCurrentUser()
-                .map(u -> u.getRoleUtilisateur() == Utilisateur.RoleUtilisateur.BIBLIOTHECAIRE)
+                .map(u -> u.getRoleUtilisateur() == RoleUtilisateur.BIBLIOTHECAIRE)
                 .orElse(false);
     }
 }

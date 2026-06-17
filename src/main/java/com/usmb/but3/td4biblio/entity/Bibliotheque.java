@@ -5,6 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
@@ -20,4 +22,10 @@ public class Bibliotheque {
     @ManyToOne
     @JoinColumn(name = "adresse_id", nullable = false)
     private Adresse adresse;
+
+    @OneToMany(mappedBy = "bibliotheque")
+    private List<Evenement> evenements;
+
+    @OneToMany(mappedBy = "bibliotheque")
+    private List<Document> documents;
 }

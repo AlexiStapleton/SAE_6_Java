@@ -1,9 +1,11 @@
 package com.usmb.but3.td4biblio.view;
 
-import com.usmb.but3.td4biblio.DTO.AuteurCreateDto;
-import com.usmb.but3.td4biblio.DTO.AuteurResponseDto;
+import com.usmb.but3.td4biblio.dto.AuteurCreateDto;
+import com.usmb.but3.td4biblio.dto.AuteurDetailResponseDto;
+import com.usmb.but3.td4biblio.dto.AuteurResponseDto;
 import org.springframework.context.annotation.Scope;
 
+import com.usmb.but3.td4biblio.entity.Auteur;
 import com.usmb.but3.td4biblio.service.AuteurService;
 import com.vaadin.flow.component.Key;
 import com.vaadin.flow.component.KeyNotifier;
@@ -41,7 +43,7 @@ public class AuteurEditor extends VerticalLayout implements KeyNotifier {
 	/**
 	 * The currently edited auteur
 	 */
-	private AuteurResponseDto auteur;
+	private AuteurDetailResponseDto auteur;
 
 	/* Fields to edit properties in Auteur entity */
 	TextField prenom = new TextField("Prénom");
@@ -118,7 +120,7 @@ public class AuteurEditor extends VerticalLayout implements KeyNotifier {
 		void onChange();
 	}
 
-	public final void editAuteur(AuteurResponseDto a) {
+	public final void editAuteur(AuteurDetailResponseDto a) {
 		if (a == null) {
 			setVisible(false);
 			return;
@@ -138,7 +140,7 @@ public class AuteurEditor extends VerticalLayout implements KeyNotifier {
 		// Bind auteur properties to similarly named fields
 		// Could also use annotation or "manual binding" or programmatically
 		// moving values from fields to entities before saving
-		binder.setBean(auteur);
+		//binder.setBean(auteur);
 
 		setVisible(true);
 

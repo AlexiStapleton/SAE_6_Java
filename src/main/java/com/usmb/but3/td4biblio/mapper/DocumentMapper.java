@@ -1,11 +1,10 @@
 package com.usmb.but3.td4biblio.mapper;
 
-import com.usmb.but3.td4biblio.DTO.DocumentCreateDto;
-import com.usmb.but3.td4biblio.DTO.DocumentDetailResponseDto;
-import com.usmb.but3.td4biblio.DTO.DocumentResponseDto;
+import com.usmb.but3.td4biblio.dto.DocumentCreateDto;
+import com.usmb.but3.td4biblio.dto.DocumentDetailResponseDto;
+import com.usmb.but3.td4biblio.dto.DocumentResponseDto;
 import com.usmb.but3.td4biblio.entity.Document;
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
+import org.mapstruct.*;
 
 @Mapper (componentModel = "spring", uses = {AuteurMapper.class, EditeurMapper.class, BibliothequeMapper.class, GenreDocumentMapper.class, CodeRaisonMapper.class})
 public interface DocumentMapper extends GenericMapper <Document, DocumentResponseDto, DocumentDetailResponseDto, DocumentCreateDto> {
@@ -18,10 +17,27 @@ public interface DocumentMapper extends GenericMapper <Document, DocumentRespons
     DocumentResponseDto toResponse(Document document);
 
     @Mapping(source = "editeur", target = "editeur", qualifiedByName = "editeurToResponse")
-    @Mapping(source = "bibliotheque", target = "bibliotheque", qualifiedByName = "bibliothequeToResponse")
     DocumentDetailResponseDto toDetailResponse(Document document);
 
+    @Mapping(target = "auteur", ignore = true)
+    @Mapping(target = "editeur", ignore = true)
+    @Mapping(target = "bibliotheque", ignore = true)
+    @Mapping(target = "genre", ignore = true)
+    @Mapping(target = "codeRaison", ignore = true)
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "createdAt", ignore = true)
+    @Mapping(target = "updatedAt", ignore = true)
     Document toEntity (DocumentCreateDto dto);
 
-
+    @Override
+    @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
+    @Mapping(target = "auteur", ignore = true)
+    @Mapping(target = "editeur", ignore = true)
+    @Mapping(target = "bibliotheque", ignore = true)
+    @Mapping(target = "genre", ignore = true)
+    @Mapping(target = "codeRaison", ignore = true)
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "createdAt", ignore = true)
+    @Mapping(target = "updatedAt", ignore = true)
+    void updateFromDto(DocumentCreateDto dto, @MappingTarget Document document);
 }

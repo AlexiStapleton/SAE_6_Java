@@ -1,5 +1,6 @@
 package com.usmb.but3.td4biblio.view;
 
+import com.usmb.but3.td4biblio.entity.RoleUtilisateur;
 import com.usmb.but3.td4biblio.service.SessionService;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.applayout.AppLayout;
@@ -25,11 +26,12 @@ import static com.vaadin.flow.theme.lumo.LumoUtility.*;
 @Layout
 public final class MainLayout extends AppLayout {
 
-    private static final Set<String> NO_MENU_ROUTES = Set.of("login", "register");
+    private static final Set<String> NO_MENU_ROUTES = Set.of("login");
 
     private final SessionService sessionService;
     private final VerticalLayout drawerContent;
     private final Span userLabel = new Span();
+    private final Scroller scroller = new Scroller();
 
     public MainLayout(SessionService sessionService) {
         this.sessionService = sessionService;
@@ -43,7 +45,8 @@ public final class MainLayout extends AppLayout {
 
         drawerContent.add(createHeader());
 
-        Scroller scroller = new Scroller(createSideNav());
+
+
         scroller.setSizeFull();
         drawerContent.add(scroller);
         drawerContent.expand(scroller);
@@ -60,11 +63,14 @@ public final class MainLayout extends AppLayout {
         boolean hideMenu = NO_MENU_ROUTES.contains(path);
         setDrawerOpened(!hideMenu);
         getElement().getThemeList().set("hide-drawer", hideMenu);
+
         userLabel.setText(
                 sessionService.getCurrentUser()
                         .map(u -> u.getPrenom() + " " + u.getNom())
                         .orElse("BiBlio Vaadin")
         );
+
+        scroller.setContent(createSideNav());
     }
 
     private Div createHeader() {
@@ -81,7 +87,18 @@ public final class MainLayout extends AppLayout {
     private SideNav createSideNav() {
         var nav = new SideNav();
         nav.addClassNames(Margin.Horizontal.MEDIUM);
-        MenuConfiguration.getMenuEntries().forEach(entry -> nav.addItem(createSideNavItem(entry)));
+
+        boolean isBibliothecaire = sessionService.getCurrentUser()
+                .map(u -> u.getRoleUtilisateur() == RoleUtilisateur.BIBLIOTHECAIRE)
+                .orElse(false);
+
+        MenuConfiguration.getMenuEntries().forEach(entry -> {
+            if (entry.path().equals("/register") && !isBibliothecaire) {
+                return; // skip
+            }
+            nav.addItem(createSideNavItem(entry));
+        });
+
         return nav;
     }
 

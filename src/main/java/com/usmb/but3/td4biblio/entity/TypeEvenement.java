@@ -5,6 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
@@ -15,4 +17,7 @@ public class TypeEvenement {
     @Id
     private Integer Id;
     private String nom;
+
+    @OneToMany(mappedBy = "typeEvenement")
+    private List<Evenement> evenements;
 }

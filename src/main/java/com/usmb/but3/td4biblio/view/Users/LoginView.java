@@ -21,13 +21,6 @@ public class LoginView extends VerticalLayout {
         setSizeFull();
         setAlignItems(FlexComponent.Alignment.CENTER);
         setJustifyContentMode(FlexComponent.JustifyContentMode.CENTER);
-
-        HorizontalLayout registerLink = new HorizontalLayout(
-                new Span("Pas encore de compte ?"),
-                new RouterLink("Créer un compte", RegisterView.class)
-        );
-        registerLink.setAlignItems(FlexComponent.Alignment.CENTER);
-
-        add(new H2("Connexion"), editor, registerLink);
+        add(new H2("Connexion"), editor);
     }
 }

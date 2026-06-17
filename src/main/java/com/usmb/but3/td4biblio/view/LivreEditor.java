@@ -1,8 +1,12 @@
 package com.usmb.but3.td4biblio.view;
 
-import com.usmb.but3.td4biblio.DTO.AuteurResponseDto;
-import com.usmb.but3.td4biblio.DTO.EditeurResponseDto;
-import com.usmb.but3.td4biblio.DTO.LivreDetailResponseDto;
+import com.usmb.but3.td4biblio.dto.AuteurResponseDto;
+import com.usmb.but3.td4biblio.dto.EditeurResponseDto;
+import com.usmb.but3.td4biblio.dto.LivreCreateDto;
+import com.usmb.but3.td4biblio.dto.LivreDetailResponseDto;
+import com.usmb.but3.td4biblio.entity.Auteur;
+import com.usmb.but3.td4biblio.entity.Livre;
+import com.usmb.but3.td4biblio.mapper.LivreMapper;
 import com.usmb.but3.td4biblio.service.AuteurService;
 import com.usmb.but3.td4biblio.service.EditeurService;
 import com.usmb.but3.td4biblio.service.LivreService;
@@ -36,12 +40,14 @@ public class LivreEditor extends VerticalLayout implements KeyNotifier {
 	private final LivreService livreService;
 	private final AuteurService auteurService;
 	private final EditeurService editeurService;
+	private final LivreMapper mapper;
 
 
 	/**
 	 * The currently edited livre
 	 */
 	private LivreDetailResponseDto livre;
+	private LivreCreateDto livreCreateDto;
 
 	/* Fields to edit properties in Livre entity */
 	TextField titre = new TextField("Titre");
@@ -68,11 +74,12 @@ public class LivreEditor extends VerticalLayout implements KeyNotifier {
 	Binder<LivreDetailResponseDto> binder = new Binder<>(LivreDetailResponseDto.class);
 	private ChangeHandler changeHandler;
 
-	public LivreEditor(AuteurService auteurService, LivreService livreService, EditeurService editeurService) {
+	public LivreEditor(AuteurService auteurService, LivreService livreService, EditeurService editeurService, LivreMapper mapper) {
 
 		this.livreService = livreService;
 		this.auteurService = auteurService;
 		this.editeurService = editeurService;
+		this.mapper = mapper;
 
 		editeur.setItems(editeurService.getAll());
 		editeur.setItemLabelGenerator(EditeurResponseDto::getNom);
@@ -112,7 +119,8 @@ public class LivreEditor extends VerticalLayout implements KeyNotifier {
 			//livreService.saveLivre(livre);
 		} else {
 			// If the livre already exists, we update it
-			livreService.update(livre);
+			livreCreateDto = mapper.fromDetailToCreate(livre);
+			livreService.update(livre.getId(), livreCreateDto);
 		}
 		changeHandler.onChange();
 	}
