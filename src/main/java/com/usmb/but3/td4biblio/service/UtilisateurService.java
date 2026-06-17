@@ -91,7 +91,7 @@ public class UtilisateurService extends AbstractGenericService<Utilisateur, Inte
         user.setPrenom(request.getPrenom());
         user.setEmail(request.getEmail());
         user.setDateNaissance(request.getDateNaissance());
-        if(request.getRoleUtilisateur() == RoleUtilisateur.EMPRUNTEUR){
+        if(request.getNumeroCarte() != null){
             user.setDateFinAbonnement(LocalDate.now().plusYears(1));
         }
         user.setNumeroCarte(request.getNumeroCarte());
