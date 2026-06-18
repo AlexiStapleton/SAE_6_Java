@@ -100,6 +100,15 @@ Cela couvre ainsi une grande partie du code. Notamment les services, repository 
 
 <img width="716" height="315" alt="image" src="https://github.com/user-attachments/assets/a04d933c-4922-4e0d-8a06-38ec7e3d1efe" />
 
+## Exemple de code
+
+Comme évoqué dans les bonnes pratiques nous avons utilisé un service générique. Cela permet de centraliser une même logique qui est commune à tous les services. Ainsi, dès que nous fabriquons un nouveau service, ce dernier possède déjà des fonctions utilisables. Dans le cas ou une fonction demande une logique différente du service générique, il est possible de override cette dernière et d'écrire notre propre logique. 
+
+<img width="972" height="750" alt="Screenshot from 2026-06-18 01-59-34" src="https://github.com/user-attachments/assets/dc75d6c0-f3a0-448d-8f56-312c2568c7ac" />
+
+
+<img width="972" height="750" alt="Screenshot from 2026-06-18 01-59-49" src="https://github.com/user-attachments/assets/946af5a1-6faa-417e-b804-05da6b807296" />
+
 
 ## Problèmes rencontrés et solutions :
 
