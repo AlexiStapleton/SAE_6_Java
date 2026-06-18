@@ -14,7 +14,7 @@ import java.util.Set;
 @Component
 public class AuthenticationInitializer implements VaadinServiceInitListener {
 
-    private static final Set<String> PUBLIC_ROUTES = Set.of("login", "register");
+    private static final Set<String> PUBLIC_ROUTES = Set.of("login", "register", "");
 
     @Override
     public void serviceInit(ServiceInitEvent event) {

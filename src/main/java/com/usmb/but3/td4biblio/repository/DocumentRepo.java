@@ -42,4 +42,11 @@ public interface DocumentRepo extends JpaRepository<Document, Integer> {
     List<Document> findByGenreNomIgnoreCase(String nom);
 
     List<Document> findAllByOrderByTitreAsc();
+
+    /**
+     * Retourne les 5 documents les plus récemment acquis (nouvelles acquisitions),
+     * triés par date d'acquisition décroissante. Utilisé par la page d'accueil.
+     */
+    List<Document> findTop5ByOrderByDateAcquisitionDesc();
+
 }

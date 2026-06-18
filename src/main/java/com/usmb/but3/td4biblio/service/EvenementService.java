@@ -15,6 +15,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
+import java.time.LocalDate;
+import java.util.List;
 
 /**
  * La couche Service où se trouve toute la logique métier des événements.
@@ -116,4 +118,18 @@ public class EvenementService extends AbstractGenericService<Evenement, Integer,
                 .findByNomContainingIgnoreCase(searchTerm, pageable)
                 .map(mapper::toResponse);
     }
+
+    /**
+     * Retourne les 5 prochains événements à venir (date de début >= aujourd'hui),
+     * triés par date de début croissante. Utilisé par la page d'accueil.
+     * @return liste des prochains événements
+     */
+    public List<EvenementResponseDto> getUpcomingEvenements() {
+        return ((EvenementRepo) repository)
+                .findTop5ByDateDebutGreaterThanEqualOrderByDateDebutAsc(LocalDate.now())
+                .stream()
+                .map(mapper::toResponse)
+                .toList();
+    }
+
 }
