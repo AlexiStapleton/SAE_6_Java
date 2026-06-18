@@ -46,6 +46,9 @@ Lors de notre analyse de l'application nous avons relevé un certain nombre d'ax
 
   Passage de SpringBoot 3.5.0 à 4.0.6 et de Vaadin 24.7.6 à 25.1.5. Cette mise à jour a demandé de modifier certaines dépendances de l'application sans pour autant présenter de gros changement.
 
+**Docker**
+
+Dans le but de faciliter la configuration de l'environnement de travail pour tous les développeurs (peu importe leur système) nous avons mis en place un Docker-compose qui permet de déployer une base de données PostgreSQL. 
   
 ## Modèle de données
 
