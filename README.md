@@ -15,7 +15,7 @@ Admin1234
 |:-----------|:------------:|------------:|
 | Mohamed  |     |    |
 | Pigné  |     |    |
-| Rob  | Docker-compose, gestion des comptes, ReadMe, Montée de versions, corrections de bugs, gestion des permissions    |    |
+| Rob  | Docker-compose, gestion des comptes, ReadMe, Montée de versions, corrections de bugs, gestion des permissions, popup pour les abonnements arrivants a terme, power point    |    |
 | Stapleton  | Migrations, Entitées, DTOs, Mapper, GlobalGenericService, Les services, Les Repositories, La page de gestion des Bibliothèques / Événements, tests unitaires, tests mock, déploiement azure     |    |
 
 
