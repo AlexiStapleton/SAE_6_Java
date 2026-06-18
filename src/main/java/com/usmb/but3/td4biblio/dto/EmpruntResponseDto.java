@@ -8,12 +8,13 @@ import lombok.NoArgsConstructor;
 import java.time.LocalDate;
 
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
-public class EmpruntDetailResponseDto {
+@NoArgsConstructor
+public class EmpruntResponseDto {
     private Emprunt.EmpruntId id;
-    private UtilisateurResponseDto utilisateur;
-    private DocumentResponseDto document;
+    private String nomUtilisateur;
+    private String nomDocument;
     private LocalDate dateCreation;
+    private LocalDate dateFin;
     private LocalDate prolongation;
 }

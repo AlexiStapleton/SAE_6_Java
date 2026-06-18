@@ -27,7 +27,7 @@ import java.util.List;
 // MS added for UI unit test : @Component and @Scope("prototype") are needed for the view to be instantiated correctly
 @Component
 @Scope("prototype")
-@Route (value="auteur") 
+@Route (value="auteur")
 @PageTitle("Les Auteurs")
 @Menu(title = "Les Auteurs", order = 0, icon = "vaadin:clipboard-check")
 public class AuteurView extends VerticalLayout {

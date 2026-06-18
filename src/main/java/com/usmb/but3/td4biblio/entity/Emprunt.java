@@ -31,6 +31,7 @@ public class Emprunt {
     private Document document;
 
     private LocalDate dateCreation;
+    private LocalDate dateFin;
     private LocalDate prolongation;
 
     @NoArgsConstructor

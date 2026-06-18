@@ -20,7 +20,7 @@ CREATE TABLE IF NOT EXISTS biblio.document (
     );
 
 ALTER SEQUENCE biblio.document_id_seq OWNED BY biblio.document.id;
--- ALTER TABLE biblio.document OWNER TO admin;
+ALTER TABLE biblio.document OWNER TO admin;
 
 -- Migrer les livres existants vers document
 -- On force les IDs pour que document.id = livre.id (indispensable pour JOINED)
