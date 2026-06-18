@@ -9,7 +9,6 @@ import com.usmb.but3.td4biblio.entity.Utilisateur;
 import com.usmb.but3.td4biblio.exception.RessourceNotFoundException;
 import com.usmb.but3.td4biblio.mapper.EmpruntMapper;
 import com.usmb.but3.td4biblio.repository.UserRepository;
-import com.usmb.but3.td4biblio.repository.UtilisateurRepo;
 import com.usmb.but3.td4biblio.repository.DocumentRepo;
 import com.usmb.but3.td4biblio.repository.EmpruntRepo;
 import org.junit.jupiter.api.BeforeEach;
@@ -52,9 +51,13 @@ class EmpruntServiceTest {
 
         utilisateur = new Utilisateur();
         utilisateur.setId(1);
+        // abonnement valide — requis pour que create() ne lève pas IllegalStateException
+        utilisateur.setDateFinAbonnement(LocalDate.now().plusYears(1));
 
         document = new Document();
         document.setId(1);
+        // empruntable requis pour que la règle 1 ne bloque pas
+        document.setEmpruntable(true);
 
         empruntId = new Emprunt.EmpruntId(1, 1);
 
@@ -63,6 +66,7 @@ class EmpruntServiceTest {
         emprunt.setUtilisateur(utilisateur);
         emprunt.setDocument(document);
         emprunt.setDateCreation(LocalDate.now());
+        emprunt.setDateFin(LocalDate.now().plusWeeks(5));
 
         createDto = new EmpruntCreateDto(1, 1, null);
 
@@ -126,9 +130,13 @@ class EmpruntServiceTest {
     @Test
     @DisplayName("create - crée et retourne le nouvel emprunt")
     void create_retourneNouvelEmprunt() {
-        when(mapper.toEntity(createDto)).thenReturn(emprunt);
         when(documentRepo.findById(1)).thenReturn(Optional.of(document));
         when(utilisateurRepo.findById(1)).thenReturn(Optional.of(utilisateur));
+        // règle 2 : document pas déjà emprunté
+        when(empruntRepo.countEmpruntsActifsByDocument(1)).thenReturn(0L);
+        // règle 3 : limite non atteinte
+        when(empruntRepo.countEmpruntsActifsByUtilisateur(1)).thenReturn(0L);
+        when(mapper.toEntity(createDto)).thenReturn(emprunt);
         when(empruntRepo.save(emprunt)).thenReturn(emprunt);
         when(mapper.toDetailResponse(emprunt)).thenReturn(detailResponseDto);
 
@@ -141,7 +149,6 @@ class EmpruntServiceTest {
     @Test
     @DisplayName("create - lève une exception si le document n'existe pas")
     void create_leveExceptionSiDocumentInexistant() {
-        when(mapper.toEntity(createDto)).thenReturn(emprunt);
         when(documentRepo.findById(1)).thenReturn(Optional.empty());
 
         assertThatThrownBy(() -> empruntService.create(createDto))
@@ -154,7 +161,6 @@ class EmpruntServiceTest {
     @Test
     @DisplayName("create - lève une exception si l'utilisateur n'existe pas")
     void create_leveExceptionSiUtilisateurInexistant() {
-        when(mapper.toEntity(createDto)).thenReturn(emprunt);
         when(documentRepo.findById(1)).thenReturn(Optional.of(document));
         when(utilisateurRepo.findById(1)).thenReturn(Optional.empty());
 
@@ -164,10 +170,69 @@ class EmpruntServiceTest {
         verify(empruntRepo, never()).save(any());
     }
 
+    @Test
+    @DisplayName("create - lève une exception si le document n'est pas empruntable")
+    void create_leveExceptionSiDocumentNonEmpruntable() {
+        document.setEmpruntable(false);
+        when(documentRepo.findById(1)).thenReturn(Optional.of(document));
+        when(utilisateurRepo.findById(1)).thenReturn(Optional.of(utilisateur));
+
+        assertThatThrownBy(() -> empruntService.create(createDto))
+                .isInstanceOf(IllegalStateException.class)
+                .hasMessageContaining("empruntable");
+
+        verify(empruntRepo, never()).save(any());
+    }
+
+    @Test
+    @DisplayName("create - lève une exception si le document est déjà emprunté")
+    void create_leveExceptionSiDocumentDejaEmprunte() {
+        when(documentRepo.findById(1)).thenReturn(Optional.of(document));
+        when(utilisateurRepo.findById(1)).thenReturn(Optional.of(utilisateur));
+        when(empruntRepo.countEmpruntsActifsByDocument(1)).thenReturn(1L);
+
+        assertThatThrownBy(() -> empruntService.create(createDto))
+                .isInstanceOf(IllegalStateException.class)
+                .hasMessageContaining("déjà emprunté");
+
+        verify(empruntRepo, never()).save(any());
+    }
+
+    @Test
+    @DisplayName("create - lève une exception si la limite de 10 emprunts est atteinte")
+    void create_leveExceptionSiLimiteAtteinte() {
+        when(documentRepo.findById(1)).thenReturn(Optional.of(document));
+        when(utilisateurRepo.findById(1)).thenReturn(Optional.of(utilisateur));
+        when(empruntRepo.countEmpruntsActifsByDocument(1)).thenReturn(0L);
+        when(empruntRepo.countEmpruntsActifsByUtilisateur(1)).thenReturn(10L);
+
+        assertThatThrownBy(() -> empruntService.create(createDto))
+                .isInstanceOf(IllegalStateException.class)
+                .hasMessageContaining("limite");
+
+        verify(empruntRepo, never()).save(any());
+    }
+
+    @Test
+    @DisplayName("create - lève une exception si l'abonnement est échu")
+    void create_leveExceptionSiAbonnementEchu() {
+        utilisateur.setDateFinAbonnement(null);
+        when(documentRepo.findById(1)).thenReturn(Optional.of(document));
+        when(utilisateurRepo.findById(1)).thenReturn(Optional.of(utilisateur));
+        when(empruntRepo.countEmpruntsActifsByDocument(1)).thenReturn(0L);
+        when(empruntRepo.countEmpruntsActifsByUtilisateur(1)).thenReturn(0L);
+
+        assertThatThrownBy(() -> empruntService.create(createDto))
+                .isInstanceOf(IllegalStateException.class)
+                .hasMessageContaining("abonnement");
+
+        verify(empruntRepo, never()).save(any());
+    }
+
     // ─── update ───────────────────────────────────────────────────────────────
 
     @Test
-    @DisplayName("update - met à jour et retourne l'emprunt modifié")
+    @DisplayName("update - met à jour la prolongation et retourne l'emprunt modifié")
     void update_retourneEmpruntMisAJour() {
         when(empruntRepo.findById(empruntId)).thenReturn(Optional.of(emprunt));
         when(documentRepo.findById(1)).thenReturn(Optional.of(document));
@@ -178,7 +243,9 @@ class EmpruntServiceTest {
         EmpruntDetailResponseDto result = empruntService.update(empruntId, createDto);
 
         assertThat(result).isNotNull();
-        verify(mapper).updateFromDto(createDto, emprunt);
+        // le service calcule prolongation = dateFin + 5 semaines
+        assertThat(emprunt.getProlongation())
+                .isEqualTo(emprunt.getDateFin().plusWeeks(5));
         verify(empruntRepo).save(emprunt);
     }
 
