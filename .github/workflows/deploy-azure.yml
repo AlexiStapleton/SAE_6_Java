@@ -31,7 +31,7 @@ jobs:
           JAR=$(ls build/libs/*.jar)
           echo "JAR trouvé : $JAR"
           ls -lh build/libs/
-          jar tf $JAR | grep "org/springframework/boot/SpringBootExceptionHandler" && echo "OK" || echo "MANQUANT"
+          jar tf $JAR | grep "db/migration/"
 
       - name: Zip JAR for deployment
         run: |
