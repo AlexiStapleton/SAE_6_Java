@@ -10,20 +10,26 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.theme.lumo.LumoUtility;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
 
 /**
- * Composant générique de carrousel horizontal défilant.
- * N'utilise aucune dépendance externe : un simple conteneur avec défilement
- * horizontal natif (overflow-x) et deux boutons de navigation (précédent / suivant)
- * qui font défiler le conteneur via JavaScript.
+ * Carrousel "diaporama" : un seul élément est visible à la fois.
+ * Les flèches précédent/suivant font tourner l'affichage parmi les éléments
+ * (5 maximum en général), en boucle.
  *
  * @param <T> le type des éléments affichés dans le carrousel
  */
 public class HomeCarousel<T> extends VerticalLayout {
 
-    private final Div track = new Div();
+    /** Largeur max partagée avec la barre de recherche, pour rester cohérent visuellement. */
+    public static final String MAX_WIDTH = "900px";
+
+    private final Div stage = new Div();
+    private final List<Component> cards = new ArrayList<>();
+    private final Span counter = new Span();
+    private int currentIndex = 0;
 
     /**
      * @param title         titre affiché au-dessus du carrousel
@@ -34,6 +40,8 @@ public class HomeCarousel<T> extends VerticalLayout {
     public HomeCarousel(String title, List<T> items, Function<T, Component> itemRenderer, String emptyMessage) {
         setPadding(false);
         setSpacing(false);
+        setWidthFull();
+        setMaxWidth(MAX_WIDTH);
         addClassNames(LumoUtility.Margin.Bottom.LARGE);
 
         Span titleSpan = new Span(title);
@@ -41,10 +49,13 @@ public class HomeCarousel<T> extends VerticalLayout {
 
         Button prev = new Button(VaadinIcon.CHEVRON_LEFT.create());
         Button next = new Button(VaadinIcon.CHEVRON_RIGHT.create());
-        prev.addClickListener(e -> scrollBy(-260));
-        next.addClickListener(e -> scrollBy(260));
+        prev.addClickListener(e -> show(currentIndex - 1));
+        next.addClickListener(e -> show(currentIndex + 1));
 
-        HorizontalLayout navButtons = new HorizontalLayout(prev, next);
+        counter.addClassNames(LumoUtility.TextColor.SECONDARY, LumoUtility.FontSize.SMALL);
+
+        HorizontalLayout navButtons = new HorizontalLayout(prev, counter, next);
+        navButtons.setAlignItems(FlexComponent.Alignment.CENTER);
         navButtons.addClassNames(LumoUtility.Gap.XSMALL);
 
         HorizontalLayout header = new HorizontalLayout(titleSpan, navButtons);
@@ -53,32 +64,45 @@ public class HomeCarousel<T> extends VerticalLayout {
         header.expand(titleSpan);
         header.addClassNames(LumoUtility.Margin.Bottom.SMALL);
 
-        track.getStyle()
+        stage.setWidthFull();
+        stage.getStyle()
                 .set("display", "flex")
-                .set("gap", "var(--lumo-space-m)")
-                .set("overflow-x", "auto")
-                .set("scroll-snap-type", "x mandatory")
-                .set("scroll-behavior", "smooth")
-                .set("padding-bottom", "var(--lumo-space-s)");
+                .set("justify-content", "center");
 
         if (items == null || items.isEmpty()) {
             Span empty = new Span(emptyMessage);
             empty.addClassNames(LumoUtility.TextColor.SECONDARY);
-            track.add(empty);
+            stage.add(empty);
+            prev.setVisible(false);
+            next.setVisible(false);
+            counter.setVisible(false);
         } else {
             items.forEach(item -> {
                 Component card = itemRenderer.apply(item);
-                card.getElement().getStyle()
-                        .set("scroll-snap-align", "start")
-                        .set("flex", "0 0 auto");
-                track.add(card);
+                card.setVisible(false);
+                cards.add(card);
+                stage.add(card);
             });
+
+            boolean singleItem = cards.size() <= 1;
+            prev.setVisible(!singleItem);
+            next.setVisible(!singleItem);
+            counter.setVisible(!singleItem);
+
+            show(0);
         }
 
-        add(header, track);
+        add(header, stage);
     }
 
-    private void scrollBy(int pixels) {
-        track.getElement().executeJs("this.scrollBy({left: $0, behavior: 'smooth'})", pixels);
+    /** Affiche l'élément à l'index donné (en bouclant si on dépasse les bornes). */
+    private void show(int index) {
+        if (cards.isEmpty()) {
+            return;
+        }
+        cards.get(currentIndex).setVisible(false);
+        currentIndex = ((index % cards.size()) + cards.size()) % cards.size();
+        cards.get(currentIndex).setVisible(true);
+        counter.setText((currentIndex + 1) + " / " + cards.size());
     }
 }

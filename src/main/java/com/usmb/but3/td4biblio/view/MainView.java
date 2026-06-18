@@ -87,8 +87,10 @@ public final class MainView extends VerticalLayout {
         this.sessionService = sessionService;
 
         addClassNames(LumoUtility.Padding.MEDIUM);
+        setAlignItems(FlexComponent.Alignment.CENTER);
 
         add(createHeader());
+        add(createSearchSection());
         add(new HomeCarousel<>(
                 "Nouvelles acquisitions",
                 documentService.getNewAcquisitions(),
@@ -101,7 +103,6 @@ public final class MainView extends VerticalLayout {
                 this::renderEvenementCard,
                 "Aucun événement à venir pour le moment."
         ));
-        add(createSearchSection());
     }
 
     // ------------------------------------------------------------------
@@ -146,6 +147,8 @@ public final class MainView extends VerticalLayout {
     private Component createSearchSection() {
         VerticalLayout section = new VerticalLayout();
         section.setPadding(false);
+        section.setWidthFull();
+        section.setMaxWidth(HomeCarousel.MAX_WIDTH);
         section.addClassNames(
                 LumoUtility.Background.CONTRAST_5,
                 LumoUtility.BorderRadius.LARGE,
