@@ -1,9 +1,6 @@
 package com.usmb.but3.td4biblio.service;
 
-import com.usmb.but3.td4biblio.dto.EditeurCreateDto;
-import com.usmb.but3.td4biblio.dto.EditeurDetailResponseDto;
-import com.usmb.but3.td4biblio.dto.EditeurResponseDto;
-import com.usmb.but3.td4biblio.dto.LivreCreateDto;
+import com.usmb.but3.td4biblio.dto.*;
 import com.usmb.but3.td4biblio.entity.Adresse;
 import com.usmb.but3.td4biblio.entity.Editeur;
 import com.usmb.but3.td4biblio.exception.RessourceNotFoundException;
@@ -80,6 +77,27 @@ public class EditeurService
                 .orElseThrow(() -> new RessourceNotFoundException("Adresse non trouvée : " + dto.getAdresseId())));
 
         return mapper.toDetailResponse(repository.save(editeur));
+    }
+    public List<EditeurResponseDto> getByNomContainingIgnoreCase(String nom) {
+        return ((EditeurRepo) repository).findByNomContainingIgnoreCase(nom)
+                .stream()
+                .map(mapper::toResponse)
+                .toList();
+    }
+
+    public Integer resolveAdresseId(AdresseCreateDto adresseDto) {
+        return adresseRepo.findByRueAndCodePostalAndVille(
+                        adresseDto.getRue(),
+                        adresseDto.getCodePostal(),
+                        adresseDto.getVille())
+                .map(Adresse::getId)
+                .orElseGet(() -> {
+                    Adresse nouvelle = new Adresse();
+                    nouvelle.setRue(adresseDto.getRue());
+                    nouvelle.setCodePostal(adresseDto.getCodePostal());
+                    nouvelle.setVille(adresseDto.getVille());
+                    return adresseRepo.save(nouvelle).getId();
+                });
     }
 
 }

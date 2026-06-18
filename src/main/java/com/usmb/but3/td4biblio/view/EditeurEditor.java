@@ -187,11 +187,11 @@ public class EditeurEditor extends VerticalLayout implements KeyNotifier {
 
     private boolean hasChanged() {
         return eq(snapshotNom, nom.getValue())
-            || eq(snapshotLienSiteWeb, lienSiteWeb.getValue())
-            || eq(snapshotLienWikipedia, lienWikipedia.getValue())
-            || eq(snapshotRue, rue.getValue())
-            || eq(snapshotCodePostal, codePostal.getValue())
-            || eq(snapshotVille, ville.getValue());
+                || eq(snapshotLienSiteWeb, lienSiteWeb.getValue())
+                || eq(snapshotLienWikipedia, lienWikipedia.getValue())
+                || eq(snapshotRue, rue.getValue())
+                || eq(snapshotCodePostal, codePostal.getValue())
+                || eq(snapshotVille, ville.getValue());
     }
 
     private static boolean eq(String a, String b) {
