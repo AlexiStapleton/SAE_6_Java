@@ -32,6 +32,7 @@ public class EmpruntView extends HorizontalLayout {
     private final UtilisateurService utilisateurService;
     private final DocumentService    documentService;
     private final boolean            isBibliothecaire;
+    private final String email;
 
     private final Grid<EmpruntResponseDto> grid;
     private final EmpruntFormDrawer        drawer;
@@ -46,6 +47,7 @@ public class EmpruntView extends HorizontalLayout {
         this.utilisateurService = utilisateurService;
         this.documentService    = documentService;
         this.isBibliothecaire   = authContext.hasRole("BIBLIOTHECAIRE");
+        this.email = authContext.getPrincipalName().orElse(null);
 
         // --- Recherche ---
         searchField = new TextField();
@@ -63,17 +65,16 @@ public class EmpruntView extends HorizontalLayout {
         grid.addColumn(EmpruntResponseDto::getNomUtilisateur).setHeader("Emprunteur").setSortProperty("nomUtilisateur");
         grid.addColumn(EmpruntResponseDto::getNomDocument).setHeader("Document").setSortProperty("nomDocument");
         grid.addColumn(EmpruntResponseDto::getDateCreation).setHeader("Date de création");
+        grid.addColumn(EmpruntResponseDto::getDateFin).setHeader("Date de fin");
         grid.addColumn(EmpruntResponseDto::getProlongation).setHeader("Prolongation");
 
         // --- Drawer ---
         drawer = new EmpruntFormDrawer(
                 isBibliothecaire,
-                (emprunt, nouvelleProlongation) -> {
+                emprunt -> {
                     var dto = new EmpruntCreateDto();
                     dto.setUtilisateurId(emprunt.getId().getUtilisateurId());
                     dto.setDocumentId(emprunt.getId().getDocumentId());
-                    dto.setProlongation(nouvelleProlongation);
-
                     var updated = empruntService.update(emprunt.getId(), dto);
                     refreshGrid(searchField.getValue());
                     return updated;
@@ -106,6 +107,7 @@ public class EmpruntView extends HorizontalLayout {
                     new AddEmpruntDialog(
                             utilisateurService,
                             documentService,
+                            empruntService,
                             dto -> {
                                 var saved = empruntService.create(dto);
                                 refreshGrid(searchField.getValue());
@@ -137,7 +139,10 @@ public class EmpruntView extends HorizontalLayout {
     }
 
     private List<EmpruntResponseDto> buildItemList(String filterText) {
-        var all = empruntService.getAll();
+        List<EmpruntResponseDto> all = isBibliothecaire
+                ? empruntService.getAll()
+                : empruntService.getAllByUtilisateurEmail(email);
+
         if (filterText == null || filterText.isBlank()) return all;
         String lower = filterText.toLowerCase();
         return all.stream()

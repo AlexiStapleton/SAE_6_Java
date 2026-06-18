@@ -20,7 +20,7 @@ class EmpruntFormDrawer extends Composite<VerticalLayout> {
 
     @FunctionalInterface
     interface ProlongerCallback {
-        EmpruntDetailResponseDto prolonger(EmpruntDetailResponseDto emprunt, LocalDate nouvelleProlongation);
+        EmpruntDetailResponseDto prolonger(EmpruntDetailResponseDto emprunt); // plus de LocalDate
     }
 
     @FunctionalInterface
@@ -36,8 +36,8 @@ class EmpruntFormDrawer extends Composite<VerticalLayout> {
     private final Span      documentLabel     = new Span();
     private final Span      dateCreationLabel = new Span();
     private final Span      prolongationLabel = new Span();
-    private final DatePicker nouvelleProlongationPicker = new DatePicker("Nouvelle prolongation");
     private final Button     prolongerButton;
+    private final Span dateFinLabel = new Span();
 
     private EmpruntDetailResponseDto currentEmprunt;
 
@@ -53,17 +53,17 @@ class EmpruntFormDrawer extends Composite<VerticalLayout> {
         form.addFormItem(emprunteurLabel,   "Emprunteur");
         form.addFormItem(documentLabel,     "Document");
         form.addFormItem(dateCreationLabel, "Date de création");
+        form.addFormItem(dateFinLabel, "Date de fin");
         form.addFormItem(prolongationLabel, "Prolongation actuelle");
 
-        prolongerButton = new Button("Prolonger", e -> prolonger());
+         prolongerButton = new Button("Prolonger de 5 semaines", e -> prolonger());
         prolongerButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
 
         var layout = getContent();
         layout.add(new H2("Détail de l'emprunt"), form);
 
         // Les emprunteurs peuvent prolonger une fois, les bibliothécaires sans limite
-        nouvelleProlongationPicker.setMin(LocalDate.now());
-        layout.add(nouvelleProlongationPicker, prolongerButton);
+        layout.add(prolongerButton);
 
         layout.setWidth("360px");
         addClassName(LumoUtility.BoxShadow.MEDIUM);
@@ -91,6 +91,10 @@ class EmpruntFormDrawer extends Composite<VerticalLayout> {
                 detail.getDateCreation() != null
                         ? detail.getDateCreation().toString()
                         : "—");
+        dateFinLabel.setText(
+                detail.getDateFin() != null
+                        ? detail.getDateFin().toString()
+                        : "—");
         prolongationLabel.setText(
                 detail.getProlongation() != null
                         ? detail.getProlongation().toString()
@@ -98,28 +102,18 @@ class EmpruntFormDrawer extends Composite<VerticalLayout> {
 
         // Un emprunteur ne peut prolonger qu'une fois (si prolongation déjà définie, on désactive)
         boolean peutProlonger = isBibliothecaire || detail.getProlongation() == null;
-        nouvelleProlongationPicker.setVisible(peutProlonger);
+
         prolongerButton.setVisible(peutProlonger);
 
-        // Pré-remplir avec la prolongation actuelle ou +5 semaines par défaut
-        if (detail.getProlongation() != null) {
-            nouvelleProlongationPicker.setValue(detail.getProlongation());
-        } else if (detail.getDateCreation() != null) {
-            nouvelleProlongationPicker.setValue(detail.getDateCreation().plusWeeks(5));
-        }
+
 
         setVisible(true);
     }
 
     private void prolonger() {
         if (currentEmprunt == null) return;
-        if (nouvelleProlongationPicker.isEmpty()) {
-            showWarning("Veuillez choisir une date de prolongation.");
-            return;
-        }
-
         try {
-            var updated = prolongerCallback.prolonger(currentEmprunt, nouvelleProlongationPicker.getValue());
+            var updated = prolongerCallback.prolonger(currentEmprunt);
             setEmpruntDetail(updated);
         } catch (RuntimeException e) {
             errorCallback.handleException(e);
