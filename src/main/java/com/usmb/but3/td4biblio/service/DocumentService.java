@@ -107,6 +107,18 @@ public class DocumentService
         }
     }
 
+    /**
+     * Retourne les 5 documents les plus récemment acquis (nouvelles acquisitions),
+     * triés par date d'acquisition décroissante. Utilisé par la page d'accueil.
+     */
+    public List<DocumentResponseDto> getNewAcquisitions() {
+        return documentRepo.findTop5ByOrderByDateAcquisitionDesc()
+                .stream()
+                .map(mapper::toResponse)
+                .toList();
+    }
+
+
     /*   Méthodes de recherche   */
 
     public List<DocumentResponseDto> searchDocuments(

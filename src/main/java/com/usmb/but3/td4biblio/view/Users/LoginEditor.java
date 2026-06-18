@@ -45,7 +45,8 @@ public class LoginEditor extends VerticalLayout implements KeyNotifier {
 
         if (userOpt.isPresent()) {
             sessionService.login(userOpt.get());
-            UI.getCurrent().navigate("auteur");
+            // Redirige vers la page d'accueil (MainView) après connexion.
+            UI.getCurrent().navigate("");
         } else {
             Notification.show("Email ou mot de passe incorrect")
                     .addThemeVariants(NotificationVariant.LUMO_ERROR);
