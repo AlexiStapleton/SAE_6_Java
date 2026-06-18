@@ -86,6 +86,14 @@ Afin de garantir un code de qualité nous avons mis en place certaines bonnes pr
 
 Dans le but de fournir une application de qualité et de garantir cette dernière nous avons réalisé de nombreux tests tant Moq que Unitaire. 
 
+Au total, 189 tests ont été effectués. 
+<img width="142" height="38" alt="Screenshot from 2026-06-18 01-55-51" src="https://github.com/user-attachments/assets/14da02d7-e941-4276-a2fb-0c7d75ffdd88" />
+
+Cela couvre ainsi une grande partie du code. Notamment les services, repository et mappers : 
+
+<img width="902" height="289" alt="Screenshot from 2026-06-18 01-52-40" src="https://github.com/user-attachments/assets/827a8ed1-67bf-4037-8af9-d70f7c7ecb50" />
+
+
 
 ## Utilisation des IA
 
