@@ -54,7 +54,9 @@ Dans le but de faciliter la configuration de l'environnement de travail pour tou
 
 Dans le but de générer un modèle de données nous avons utilisé des migrations. Le modèle est maintenant le suivant :
 
+![alt text](MCD_SAE_V2.png)
 
+![alt text](MPD_SAE_V2.png)
 
 ## Architecture de l'application 
 
