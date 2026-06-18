@@ -80,6 +80,13 @@ jar {
 	enabled = false // Désactive le JAR plain, garde uniquement le bootJar
 }
 
+configurations.all {
+	resolutionStrategy {
+		force 'ch.qos.logback:logback-classic:1.5.32'
+		force 'ch.qos.logback:logback-core:1.5.32'
+	}
+}
+
 tasks.named('test') {
 	useJUnitPlatform()
 	/* MS added for Mockito agent
