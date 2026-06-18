@@ -36,7 +36,8 @@ jobs:
       - name: Zip JAR for deployment
         run: |
           cd build/libs
-          zip deploy.zip *.jar
+          mv *.jar app.jar
+          zip deploy.zip app.jar
 
       - name: Deploy to Azure App Service
         uses: azure/webapps-deploy@v3
