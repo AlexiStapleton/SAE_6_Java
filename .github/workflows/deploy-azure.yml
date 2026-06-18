@@ -24,7 +24,7 @@ jobs:
           cache: gradle
 
       - name: Build with Gradle (Vaadin production)
-        run: ./gradlew clean build -Pvaadin.productionMode=true --no-daemon -x test
+        run: ./gradlew clean build -Pvaadin.productionMode=true --no-daemon -x test --rerun-tasks
 
       - name: Verify JAR
         run: |
