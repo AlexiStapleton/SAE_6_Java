@@ -15,5 +15,6 @@ public class EmpruntDetailResponseDto {
     private UtilisateurResponseDto utilisateur;
     private DocumentResponseDto document;
     private LocalDate dateCreation;
+    private LocalDate dateFin;
     private LocalDate prolongation;
 }

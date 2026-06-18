@@ -15,5 +15,6 @@ public class EmpruntResponseDto {
     private String nomUtilisateur;
     private String nomDocument;
     private LocalDate dateCreation;
+    private LocalDate dateFin;
     private LocalDate prolongation;
 }

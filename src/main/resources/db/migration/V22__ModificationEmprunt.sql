@@ -1,0 +1,1 @@
+ALTER TABLE biblio.emprunt ADD COLUMN date_fin DATE;
