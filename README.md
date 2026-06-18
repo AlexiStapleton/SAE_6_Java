@@ -16,7 +16,7 @@ Admin1234
 | Mohamed  | Gestion CRUD des documents, Recherche filtrée (type de document; type de recherche : commence par, contient ; recherche par champ : auteur, bibliotheque, etc.) Création Modèle de données (MCD, MPD), amélioration de service et dtos liés aux documents | 21 |
 | Pigné  |                                                                         Gestion CRUD des éditeurs, gestion CRUD des adresses,  Page d'accueil, caroussel, amélioration du routing                                                                         | 21 |
 | Rob  |                                         Docker-compose, gestion des comptes, ReadMe, Montée de versions, corrections de bugs, gestion des permissions, popup pour les abonnements arrivants a terme, power point                                          | 21 |
-| Stapleton  |                                Migrations, Entitées, DTOs, Mapper, GlobalGenericService, Les services, Les Repositories, La page de gestion des Bibliothèques / Événements, tests unitaires, tests mock, déploiement azure                                | 37 |
+| Stapleton  |                                Migrations, Entitées, DTOs, Mapper, GlobalGenericService, Les services, Les Repositories, La page de gestion des Bibliothèques / Événements, tests unitaires, tests mock, déploiement azure et gestion des emprunt avec les differents restrictions                              | 37 |
 
 
 **Fonctionnalités de l'application :**
@@ -93,11 +93,13 @@ Afin de garantir un code de qualité nous avons mis en place certaines bonnes pr
 Dans le but de fournir une application de qualité et de garantir cette dernière nous avons réalisé de nombreux tests tant Moq que Unitaire. 
 
 Au total, 189 tests ont été effectués. 
-<img width="142" height="38" alt="Screenshot from 2026-06-18 01-55-51" src="https://github.com/user-attachments/assets/14da02d7-e941-4276-a2fb-0c7d75ffdd88" />
+<img width="266" height="27" alt="image" src="https://github.com/user-attachments/assets/1ac08563-ea2e-46f7-9cdf-cb3b3098b733" />
+
 
 Cela couvre ainsi une grande partie du code. Notamment les services, repository et mappers : 
 
-<img width="902" height="289" alt="Screenshot from 2026-06-18 01-52-40" src="https://github.com/user-attachments/assets/827a8ed1-67bf-4037-8af9-d70f7c7ecb50" />
+<img width="716" height="315" alt="image" src="https://github.com/user-attachments/assets/a04d933c-4922-4e0d-8a06-38ec7e3d1efe" />
+
 
 ## Problèmes rencontrés et solutions :
 
