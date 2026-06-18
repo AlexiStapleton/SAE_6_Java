@@ -6,15 +6,21 @@ import com.vaadin.flow.component.KeyNotifier;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
+import com.vaadin.flow.component.dialog.Dialog;
+import com.vaadin.flow.component.html.H2;
+import com.vaadin.flow.component.html.Paragraph;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
+import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.EmailField;
 import com.vaadin.flow.component.textfield.PasswordField;
 import com.vaadin.flow.spring.annotation.SpringComponent;
 import com.vaadin.flow.spring.annotation.UIScope;
 
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.Optional;
 
 @SpringComponent
@@ -42,14 +48,36 @@ public class LoginEditor extends VerticalLayout implements KeyNotifier {
 
     private void login() {
         Optional<Utilisateur> userOpt = sessionService.authenticate(email.getValue(), password.getValue());
-
         if (userOpt.isPresent()) {
             sessionService.login(userOpt.get());
-            // Redirige vers la page d'accueil (MainView) après connexion.
-            UI.getCurrent().navigate("");
+            UI.getCurrent().navigate("auteur");
+            checkAbonnementExpiration(userOpt.get());
         } else {
             Notification.show("Email ou mot de passe incorrect")
                     .addThemeVariants(NotificationVariant.LUMO_ERROR);
+        }
+    }
+
+    private void checkAbonnementExpiration(Utilisateur user) {
+        if (user.getDateFinAbonnement() == null) return;
+
+        LocalDate today = LocalDate.now();
+        LocalDate limit = today.plusWeeks(2);
+
+        if (!user.getDateFinAbonnement().isAfter(limit)) {
+            Dialog dialog = new Dialog();
+            dialog.add(new H2("⚠️ Attention"));
+            dialog.add(new Paragraph("Votre abonnement est sur le point d'expirer."));
+
+            Button closeBtn = new Button("OK", e -> dialog.close());
+            closeBtn.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+            HorizontalLayout btnLayout = new HorizontalLayout(closeBtn);
+            btnLayout.setJustifyContentMode(FlexComponent.JustifyContentMode.CENTER);
+            btnLayout.setWidthFull();
+            dialog.add(btnLayout);
+
+            dialog.setCloseOnOutsideClick(false);
+            dialog.open();
         }
     }
 }

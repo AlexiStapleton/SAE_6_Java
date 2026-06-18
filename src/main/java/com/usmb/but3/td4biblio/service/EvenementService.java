@@ -18,7 +18,6 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.util.List;
 
-
 /**
  * La couche Service où se trouve toute la logique métier des événements.
  * Elle interagit avec la couche Repository pour accéder aux données.

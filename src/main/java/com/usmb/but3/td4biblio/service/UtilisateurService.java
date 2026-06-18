@@ -4,6 +4,7 @@ import com.usmb.but3.td4biblio.dto.UtilisateurDetailResponseDto;
 import com.usmb.but3.td4biblio.dto.RegisterRequest;
 import com.usmb.but3.td4biblio.dto.UtilisateurResponseDto;
 import com.usmb.but3.td4biblio.entity.Adresse;
+import com.usmb.but3.td4biblio.entity.RoleUtilisateur;
 import com.usmb.but3.td4biblio.entity.Utilisateur;
 import com.usmb.but3.td4biblio.exception.RessourceNotFoundException;
 import com.usmb.but3.td4biblio.mapper.UtilisateurMapper;
@@ -90,7 +91,9 @@ public class UtilisateurService extends AbstractGenericService<Utilisateur, Inte
         user.setPrenom(request.getPrenom());
         user.setEmail(request.getEmail());
         user.setDateNaissance(request.getDateNaissance());
-        user.setDateFinAbonnement(LocalDate.now().plusYears(1));
+        if(request.getNumeroCarte() != null){
+            user.setDateFinAbonnement(LocalDate.now().plusYears(1));
+        }
         user.setNumeroCarte(request.getNumeroCarte());
         user.setHashMotDePasse(passwordEncoder.encode(motDePasseDate));
         user.setRoleUtilisateur(request.getRoleUtilisateur());
