@@ -11,12 +11,12 @@ Admin1234
 
 ## Tableau des réalisations : ##
 
-| Nom | Réalisations | % |
-|:-----------|:------------:|------------:|
-| Mohamed  | Gestion CRUD des documents, Recherche filtrée (type de document; type de recherche : commence par, contient ; recherche par champ : auteur, bibliotheque, etc.) Création Modèle de données (MCD, MPD), amélioration de service et dtos liés aux documents     |    |
-| Pigné  |     |    |
-| Rob  | Docker-compose, gestion des comptes, ReadMe, Montée de versions, corrections de bugs, gestion des permissions, popup pour les abonnements arrivants a terme, power point    |    |
-| Stapleton  | Migrations, Entitées, DTOs, Mapper, GlobalGenericService, Les services, Les Repositories, La page de gestion des Bibliothèques / Événements, tests unitaires, tests mock, déploiement azure     |    |
+| Nom |                                                                                                                       Réalisations                                                                                                                        | % |
+|:-----------|:---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------:|------------:|
+| Mohamed  | Gestion CRUD des documents, Recherche filtrée (type de document; type de recherche : commence par, contient ; recherche par champ : auteur, bibliotheque, etc.) Création Modèle de données (MCD, MPD), amélioration de service et dtos liés aux documents |    |
+| Pigné  |                                                                         Gestion CRUD des éditeurs, gestion CRUD des adresses,  Page d'accueil, caroussel, amélioration du routing                                                                         |    |
+| Rob  |                                         Docker-compose, gestion des comptes, ReadMe, Montée de versions, corrections de bugs, gestion des permissions, popup pour les abonnements arrivants a terme, power point                                          |    |
+| Stapleton  |                                Migrations, Entitées, DTOs, Mapper, GlobalGenericService, Les services, Les Repositories, La page de gestion des Bibliothèques / Événements, tests unitaires, tests mock, déploiement azure                                |    |
 
 
 **Fonctionnalités de l'application :**
@@ -26,6 +26,7 @@ Cette application permet de gérer des biblioothèques. Nous retrouvons les fonc
  - Gestion de comptes (avec différents rôles)
  - Gestion d'éditeurs
  - Gestion d'auteurs
+ - Gestion de documents
  - Évènements
 
 ## Configuration de l'application
