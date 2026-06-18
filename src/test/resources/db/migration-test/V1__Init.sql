@@ -202,6 +202,7 @@ CREATE TABLE emprunt (
                                 utilisateur_id INTEGER,
                                 document_id INTEGER,
                                 date_creation DATE,
+                                date_fin DATE,
                                 prolongation DATE,
                                 PRIMARY KEY (utilisateur_id, document_id),
                                 FOREIGN KEY (utilisateur_id) REFERENCES utilisateur(id),
@@ -262,24 +263,29 @@ INSERT INTO editeur VALUES
 INSERT INTO bibliotheque VALUES
     (1,'Biblio Chambéry',1);
 
--- UTILISATEURS
-INSERT INTO utilisateur VALUES
-                                   (1,'Dupont','Alice','alice@mail.com','2000-01-01',NULL,'CARD001','EMPRUNTEUR','hash',1),
-                                   (2,'Martin','Paul','paul@mail.com','1990-01-01',NULL,'CARD002','BIBLIOTHECAIRE','hash',1);
 
 -- GENRES / RAISON
 INSERT INTO genre_document VALUES (1,'Roman');
 INSERT INTO code_raison VALUES (1,'ACHAT','Test');
 
 -- DOCUMENTS
-INSERT INTO document VALUES
-                                (1,1,1,1,1,1,'Les Misérables',NULL,NULL,NULL,'2020-01-01','1862-01-01','A1',TRUE,CURRENT_DATE,CURRENT_DATE),
-                                (2,2,2,1,1,1,'Fictions',NULL,NULL,NULL,'2020-01-01','1944-01-01','A2',TRUE,CURRENT_DATE,CURRENT_DATE);
+-- UTILISATEURS (remplacer la ligne existante)
+INSERT INTO utilisateur VALUES
+                            (1,'Dupont','Alice','alice@mail.com','2000-01-01', DATEADD('YEAR', 1, CURRENT_DATE),'CARD001','EMPRUNTEUR','hash',1),
+                            (2,'Martin','Paul','paul@mail.com','1990-01-01', NULL,'CARD002','BIBLIOTHECAIRE','hash',1);
 
--- LIVRES
+-- DOCUMENTS (ajouter un 3e document empruntable et un 4e non empruntable)
+INSERT INTO document VALUES
+                         (1,1,1,1,1,1,'Les Misérables',NULL,NULL,NULL,'2020-01-01','1862-01-01','A1',TRUE,CURRENT_DATE,CURRENT_DATE),
+                         (2,2,2,1,1,1,'Fictions',NULL,NULL,NULL,'2020-01-01','1944-01-01','A2',TRUE,CURRENT_DATE,CURRENT_DATE),
+                         (3,1,1,1,1,1,'Doc empruntable libre',NULL,NULL,NULL,'2020-01-01','2000-01-01','A3',TRUE,CURRENT_DATE,CURRENT_DATE),
+                         (4,1,1,1,1,1,'Doc non empruntable',NULL,NULL,NULL,'2020-01-01','2000-01-01','A4',FALSE,CURRENT_DATE,CURRENT_DATE);
+
 INSERT INTO livre VALUES
-                             (1,'ISBN1',450),
-                             (2,'ISBN2', 320);
+                      (1,'ISBN1',450),
+                      (2,'ISBN2',320),
+                      (3,'ISBN3',200),
+                      (4,'ISBN4',100);
 
 -- DVD
 INSERT INTO dvd VALUES
@@ -287,7 +293,7 @@ INSERT INTO dvd VALUES
 
 -- EMPRUNTS
 INSERT INTO emprunt VALUES
-    (1,1,CURRENT_DATE,NULL);
+    (1,1,CURRENT_DATE, DATEADD('WEEK', 5, CURRENT_DATE),NULL);
 
 -- EVENEMENTS
 INSERT INTO type_evenement VALUES (1,'Lecture');
