@@ -99,7 +99,12 @@ Cela couvre ainsi une grande partie du code. Notamment les services, repository 
 
 <img width="902" height="289" alt="Screenshot from 2026-06-18 01-52-40" src="https://github.com/user-attachments/assets/827a8ed1-67bf-4037-8af9-d70f7c7ecb50" />
 
+## Problèmes rencontrés et solutions :
 
+- Selon les OS nous avons rencontré des problèmes afin de lancer le projet. L'utilisation de Docker nous a permis d'unifier l'usage des services.
+- Nous avons fait face à des problèmes de versioning. L'utilisation de Gitflow nous a permis de rapidement identifier et corriger des problèmes afin qu'ils ne perdurent pas sur la branche develop.
+- Le framework Vaadin nous à posé problème en début de SAE pour sa nouveauté, il a été nécessaire de comprendre son fonctionnement avant de développer des fonctionnalités trop complexes.
+- La conception des données en début de projet a été effectué un peu trop rapidemment, les fichiers de migrations n'ont pas été conçus avec précision au début. Nous avons donc rajouté des contraintes et des séquences car il manquait des auto increment.
 
 ## Utilisation des IA
 
